@@ -1,0 +1,13 @@
+999  未知错误
+1 开头为通用错误
+2 开头为文章类错误
+
+5 开头邮件类异常
+
+20000 请求的页面没有返回响应
+
+article:articleid:pv
+article:articleid:cateid
+categorys:cateid:view
+
+

@@ -1,0 +1,12 @@
+.idea
+composer.lock
+*.log
+/thinkphp/
+/public/upload/
+/public/ueditor/
+
+/public/img/
+/public/css/
+/public/fonts/
+/public/js/
+/.env
