@@ -7,8 +7,21 @@
  */
 use think\Route;
 
-//首页左边内容请求api
-Route::any('api/:version/email/getcode','api/:version.email/getCode');
+
+Route::any('api/:version/email/getcode','api/:version.email/getCode'); // 发送邮件
+Route::any('api/:version/admin/register','api/:version.admin/register'); //用户注册
+
+
+
+
+
+
+
+
+
+
+
+
 Route::any('api/:version/user/register','api/:version.user/register');
 Route::any('api/:version/user/login','api/:version.user/login');
 Route::any('api/:version/user/upvotesum','api/:version.user/upVoteSum'); //获赞数

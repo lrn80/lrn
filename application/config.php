@@ -15,9 +15,9 @@ return [
     // +----------------------------------------------------------------------
 
     // 应用调试模式
-    'app_debug'              => false,
+    'app_debug'              => \think\Env::get('app_debug', false),
     // 应用Trace
-    'app_trace'              => false,
+    'app_trace'              => \think\Env::get('app_trace', false),
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块

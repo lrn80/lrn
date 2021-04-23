@@ -1,13 +1,10 @@
 999  未知错误
 1 开头为通用错误
-2 开头为文章类错误
-
-5 开头邮件类异常
-
-20000 请求的页面没有返回响应
-
-article:articleid:pv
-article:articleid:cateid
-categorys:cateid:view
-
-
+2 用户错误
+3 图书错误
+4 结束管理错误
+5 破损修复管理错误
+6 阅览管理错误
+7 student 错误
+8 入库错误
+9 邮箱错误

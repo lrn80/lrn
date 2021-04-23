@@ -15,7 +15,7 @@ use app\api\validate\EmailCheck;
 use app\exception\EmailException;
 use app\api\service\User as UserService;
 use app\exception\UserExtistException;
-
+use app\api\service\Admin as AdminService;
 
 class Email extends BaseController
 {
@@ -30,7 +30,8 @@ class Email extends BaseController
     {
         (new EmailCheck())->goCheck();
         $params = $this->request->param();
-        if ($this->checkUserExist($params['email'])) {
+        $email = $params['email'] ?? '';
+        if (AdminService::checkAdminExist($email)) {
             throw new UserExtistException();
         }
         $code = EmailService::sendCode($params);
@@ -39,14 +40,5 @@ class Email extends BaseController
         }
 
         return json(['code' => $code]);
-    }
-
-    protected function checkUserExist($email) {
-        $user_info = UserService::getUserInfoByCondition(['email' => $email]);
-        if ($user_info) {
-            return true;
-        }
-
-        return false;
     }
 }

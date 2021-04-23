@@ -16,6 +16,7 @@ class Redis
             self::$_instance = new \Redis();
             self::$_instance->connect(config("setting.redis_host"),config("setting.redis_port"));
             self::$_instance->auth(config('setting.redis_password'));
+            self::$_instance->select(config('setting.redis_db'));
         }
 
         return self::$_instance;
