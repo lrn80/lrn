@@ -8,7 +8,6 @@
 
 return [
     'img_prefix' => 'http://xy.liruoning.cn:8011',
-    'url_prefix' => 'http://47.102.205.111:9035',
     'background_total' => 7,
     'background_suffix' => '.jpg',
     'aphorism_total' => 30,
@@ -19,4 +18,5 @@ return [
     'redis_password' => \think\Env::get('redis.password', 123456),
     'redis_db' => \think\Env::get('redis.db', 0),
     'redis_login_code_prefix' => 'lrn_redis_login_code_',
+    'img_url' => ROOT_PATH . 'public' . DS . 'upload' . DS . 'user'
 ];

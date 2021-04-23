@@ -14,7 +14,7 @@ use app\exception\UserNotExtistException;
 use app\exception\WeChatException;
 use think\Exception;
 use app\api\model\User;
-
+use app\api\model\Admin;
 class TokenUser extends Token {
     protected $user = [];
 
@@ -30,7 +30,7 @@ class TokenUser extends Token {
      * @throws UserNotExtistException
      */
     public function get($uid) {
-        $this->user = (new User())->getUserByCondition(['id' => $uid]);
+        $this->user = (new Admin())->getOne(['id' => $uid]);
         if (!$this->user) {
             throw new UserNotExtistException();
         }

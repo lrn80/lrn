@@ -12,6 +12,6 @@ namespace app\exception;
 class LoginException extends BaseException {
     public $code = "400";
     public $msg = "用户不存在或者密码有误";
-    public $errorCode = "10000";
+    public $errorCode = "20004";
 
 }

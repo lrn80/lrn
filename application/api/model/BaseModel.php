@@ -49,9 +49,9 @@ class BaseModel extends Model
         }
 
         if ($toArray) {
-            return $this->select()->toArray();
+            return $this->find()->toArray();
         } else {
-            return $this->select();
+            return $this->find();
         }
     }
 

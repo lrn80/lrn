@@ -10,3 +10,4 @@ composer.lock
 /public/fonts/
 /public/js/
 /.env
+/public/upload/
