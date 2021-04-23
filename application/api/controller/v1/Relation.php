@@ -26,7 +26,7 @@ class Relation extends BaseController
         (new FollowIdCheck())->goCheck();
         $uid = Token::getCurrentTokenVar('id');
         $follower_id = $this->request->param('follow_id');
-        $res = RelationService::follow($uid, $follower_id);
+        $res = RelationService::followDel($uid, $follower_id);
         if ($res) {
             throw new SucceedMessage();
         } else {
@@ -45,9 +45,21 @@ class Relation extends BaseController
         return json(RelationService::getFollowList($uid));
     }
 
+    /**
+     * 获取粉丝列表
+     * @return \think\response\Json
+     * @throws \app\exception\TokenException
+     * @throws \think\Exception
+     */
     public function fansList() {
         $uid = Token::getCurrentTokenVar('id');
         return json(RelationService::getFansList($uid));
+    }
+
+    public function followDel() {
+        (new FollowIdCheck())->goCheck();
+        $uid = Token::getCurrentTokenVar('id');
+        $follower_id = $this->request->param('follow_id');
     }
 
 }

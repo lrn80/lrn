@@ -121,4 +121,81 @@ class Relation
         $fans_ids = array_column($fans_list, 'follower_id');
         return $user_model->where('id', 'in', $fans_ids)->field('id,username,avatar')->select();
     }
+
+    public static function followDel($uid, $follower_id)
+    {
+        self::checkUser($follower_id); // 查询用户是否存在
+        $relation_model = new UserRelation();
+        $relation_model->startTrans();
+        try {
+            $follow_res = self::toFollowDel($uid, $follower_id);
+            if (!$follow_res) {
+                $relation_model->rollback();
+                return false;
+            }
+
+            $fans_res = self::toFansDel($uid, $follower_id);
+            if (!$fans_res) {
+                $relation_model->rollback();
+                return false;
+            }
+
+            $relation_model->commit();
+            return true;
+        } catch (\Exception $e) {
+            Log::error(__METHOD__ . "DELETE follow fail ErrorMsg:" . $e->getMessage());
+            $relation_model->rollback();
+            throw new FollowExtistException([
+                '取消关注异常，请稍后再试～'
+            ]);
+        }
+    }
+
+    public static function toFollowDel($uid, $follower_id)
+    {
+        $relation_model = new UserRelation();
+        $data_follow = [
+            'uid' => $uid,
+            'follower_id' => $follower_id,
+            'relation_type' => self::FOLLOW
+        ];
+        $relation_info = $relation_model->where($data_follow)->find();
+        if (!$relation_info) {
+            throw new FollowExtistException([
+                'msg' => '你已取消这个用户的关注，请勿重复操作。'
+            ]);
+        }
+
+        $res = $relation_model->where($data_follow)->delete();
+        if (!$res) {
+            Log::error(__METHOD__ . " DELETE user relation follow fail uid:{$uid} follower_id:{$follower_id}");
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function toFansDel($uid, $follower_id)
+    {
+        $relation_model = new UserRelation();
+        $data_fans = [
+            'uid' => $follower_id,
+            'follower_id' => $uid,
+            'relation_type' => self::FANS
+        ];
+        $relation_info = $relation_model->where($data_fans)->find();
+        if (!$relation_info) {
+            throw new FollowExtistException([
+                'msg' => '你已取消这个用户的关注，请勿重复操作。'
+            ]);
+        }
+
+        $res = $relation_model->where($data_fans)->delete();
+        if (!$res) {
+            Log::error(__METHOD__ . "DELETE user relation fans fail uid:{$uid} follower_id:{$follower_id}");
+            return false;
+        }
+
+        return true;
+    }
 }
