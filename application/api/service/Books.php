@@ -5,6 +5,7 @@ namespace app\api\service;
 use app\api\model\Books as BooksModel;
 use app\api\model\Detail;
 use app\exception\BooksException;
+use think\Exception;
 use think\Log;
 
 class Books
@@ -103,7 +104,7 @@ class Books
         }
 
         $data = [];
-        $detailData['b_no'] = $info['b_no'];
+        $detailData = ['b_no' => $info['b_no']];
         $data['id'] = $id;
         foreach ($params as $k => $v) {
             if (in_array($k, self::$updateParams)){
@@ -125,8 +126,20 @@ class Books
                     'msg' => '更新图书管理数据失败，请稍后再试～'
                 ]);
             }
-        } catch (\Exception $e){
 
+            $detailRes = $detailModel->update($detailData, ['b_no' => $info['b_no']]);
+            if (!$detailRes){
+                $booksModel->rollback();
+                Log::error(__METHOD__ . ' detail 更新图书管理数据失败 data: ' . json_encode($data));
+                throw new BooksException([
+                    'msg' => '更新图书管理数据失败，请稍后再试～'
+                ]);
+            }
+
+            $booksModel->commit();
+        } catch (\Exception $e){
+            $booksModel->rollback();
+            throw $e;
         }
 
         return true;
