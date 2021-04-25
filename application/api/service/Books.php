@@ -11,7 +11,11 @@ class Books
 {
     static  $updateParams = [
         'bname', 'author', 'price', 'total_stock', 'now_stock', 'in_library_time',
-        'b_no'
+        //'b_no'
+    ];
+
+    static $updateDetail = [
+        'call_number', 'location', 'author', 'press', 'status'
     ];
 
     public static function getBooksList($page)
@@ -90,6 +94,7 @@ class Books
     public static function updateBooks($id, $params)
     {
         $booksModel = new BooksModel();
+        $detailModel = new Detail();
         $info = $booksModel->getOne(['id' => $id]);
         if (!$info){
             throw new BooksException([
@@ -98,19 +103,30 @@ class Books
         }
 
         $data = [];
+        $detailData['b_no'] = $info['b_no'];
         $data['id'] = $id;
         foreach ($params as $k => $v) {
             if (in_array($k, self::$updateParams)){
                 $data[$k] = $v;
             }
+
+            if (in_array($k, self::$updateDetail)){
+                $detailData[$k] = $v;
+            }
         }
 
-        $res = $booksModel->updateData($data);
-        if (!$res){
-            Log::error(__METHOD__ . ' 更新图书管理数据失败 data: ' . json_encode($data));
-            throw new BooksException([
-                'msg' => '更新图书管理数据失败，请稍后再试～'
-            ]);
+        $booksModel->startTrans();
+        try {
+            $res = $booksModel->updateData($data);
+            if (!$res){
+                $booksModel->rollback();
+                Log::error(__METHOD__ . ' 更新图书管理数据失败 data: ' . json_encode($data));
+                throw new BooksException([
+                    'msg' => '更新图书管理数据失败，请稍后再试～'
+                ]);
+            }
+        } catch (\Exception $e){
+
         }
 
         return true;
