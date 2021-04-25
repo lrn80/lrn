@@ -8,6 +8,11 @@ use think\Log;
 
 class Books
 {
+    static  $updateParams = [
+        'bname', 'author', 'price', 'total_stock', 'now_stock', 'in_library_time',
+        'b_no'
+    ];
+
     public static function getBooksList($page)
     {
         $booksModel = new BooksModel();
@@ -23,6 +28,7 @@ class Books
             'total_stock' => $params['total_stock'],
             'now_stock' => $params['total_stock'],
             'in_library_time' => $params['in_library_time'] ?? date('Y-m-d H:i:s'),
+            'b_no' => $params['b_no'],
         ];
 
         $booksModel = new BooksModel();
@@ -49,28 +55,10 @@ class Books
 
         $data = [];
         $data['id'] = $id;
-        if (isset($params['bname'])){
-            $data['bname'] = $params['bname'];
-        }
-
-        if (isset($params['author'])){
-            $data['author'] = $params['author'];
-        }
-
-        if (isset($params['price'])){
-            $data['price'] = $params['price'] * 100;
-        }
-
-        if (isset($params['total_stock'])){
-            $data['total_stock'] = $params['total_stock']; // 总库存
-        }
-
-        if (isset($params['now_stock'])){
-            $data['now_stock'] = $params['now_stock'];
-        }
-
-        if (isset($params['in_library_time'])){
-            $data['in_library_time'] = $params['in_library_time'];
+        foreach ($params as $k => $v) {
+            if (in_array($k, self::$updateParams)){
+                $data[$k] = $v;
+            }
         }
 
         $res = $booksModel->updateData($data);
@@ -87,11 +75,9 @@ class Books
     public static function search($key, $page)
     {
         $booksModel = new BooksModel();
-        $list = $booksModel->where('bname', 'like', "%{$key}%")
+        return $booksModel->where('bname', 'like', "%{$key}%")
                    ->whereOr('author', 'like', "%$key%")
                    ->page($page)
                    ->select();
-
-        return $list;
     }
 }

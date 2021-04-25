@@ -12,6 +12,7 @@ class BooksCheck extends BaseValidate
         'price' => 'require|float', // 价格（分）
         'total_stock' => 'require|isMustInteger',
         'in_library_time' => 'require|dateFormat:Y-m-d H:i:s',
+        'b_no' => 'require|max:40|min:1',
     ];
     protected $message = [
 

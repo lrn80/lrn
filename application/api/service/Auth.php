@@ -8,7 +8,9 @@
 
 namespace app\api\service;
 use app\api\model\Auth as AuthModel;
+use app\api\model\UserAuth;
 use app\exception\AuthException;
+use think\Exception;
 use think\Log;
 
 class Auth
@@ -66,6 +68,35 @@ class Auth
         if (!$res) {
             Log::error(__METHOD__ . ' 修改权限失败 data: ' . json_encode($data));
             return false;
+        }
+
+        return true;
+    }
+
+    public static function del($authId)
+    {
+        $authModel = new AuthModel();
+        $authUserModel = new UserAuth();
+        $info = $authModel->getOne(['id' => $authId]);
+        if (!$info){
+            throw new AuthException([
+                'msg' => '要删除的权限不存在或者已删除'
+            ]);
+        }
+
+        $authModel->startTrans();
+        try {
+            $res = $info->delete();
+            if (!$res){
+                $authModel->rollback();
+                throw new Exception();
+            }
+
+            $authUserModel->where(['auth_id' => $authId])->delete();
+            $authModel->commit();
+        } catch (\Exception $e){
+            $authModel->rollback();
+            throw new AuthException(['msg' => '权限删除失败']);
         }
 
         return true;

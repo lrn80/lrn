@@ -18,6 +18,7 @@ Route::any('api/:version/admin/del','api/:version.admin/delete'); //
 Route::any('api/:version/auth/list','api/:version.auth/authList'); //获取权限列表
 Route::any('api/:version/auth/add','api/:version.auth/add');
 Route::any('api/:version/auth/update','api/:version.auth/update');
+Route::any('api/:version/auth/del','api/:version.auth/delete'); //
 
 
 Route::any('api/:version/books/add','api/:version.books/addBooks');

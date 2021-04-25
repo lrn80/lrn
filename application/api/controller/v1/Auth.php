@@ -12,6 +12,7 @@ namespace app\api\controller\v1;
 use app\api\controller\BaseController;
 use app\api\service\Auth as AuthService;
 use app\api\validate\AuthCheck;
+use app\api\validate\AuthIdCheck;
 use app\api\validate\AuthNameCheck;
 use app\exception\AuthException;
 use app\exception\SucceedMessage;
@@ -65,6 +66,15 @@ class Auth extends BaseController
             throw new AuthException([
                 'msg' => '权限更新异常，请稍后再试~'
             ]);
+        }
+    }
+
+    public function delete(){
+        (new AuthIdCheck())->goCheck();
+        $authId = $this->request->param('id');
+        $res = AuthService::del($authId);
+        if ($res){
+            throw new SucceedMessage();
         }
     }
 }
