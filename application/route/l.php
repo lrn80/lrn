@@ -12,6 +12,7 @@ Route::any('api/:version/email/getcode','api/:version.email/getCode'); // 发送
 Route::any('api/:version/admin/register','api/:version.admin/register'); //用户注册
 Route::any('api/:version/admin/login','api/:version.admin/login'); //用户注册
 Route::post('api/:version/admin/edit','api/:version.admin/edit'); //用户注册
+Route::any('api/:version/admin/test','api/:version.admin/test'); //用户注册
 
 
 Route::any('api/:version/auth/list','api/:version.auth/authList'); //获取权限列表

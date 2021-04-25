@@ -4,24 +4,23 @@
 namespace app\api\controller\v1;
 
 use app\api\controller\BaseController;
+use app\api\service\Admin as AdminService;
 use app\api\service\Email;
-use app\api\service\Token;
 use app\api\service\Upload;
-use app\api\service\User as UserService;
 use app\api\validate\AdminCheck;
 use app\api\validate\AdminRegisterCheck;
 use app\api\validate\LoginCheck;
-use app\api\validate\UserCheck;
 use app\exception\AdminException;
 use app\exception\LoginException;
-use app\exception\RegisterException;
 use app\exception\SucceedMessage;
-use app\exception\UserEditException;
-use app\exception\UserException;
 use app\exception\UserExtistException;
-use app\api\service\Admin as AdminService;
+
 class Admin extends BaseController
 {
+    public $beforeActionList = [
+        'checkAuth' => ['only' => 'test']
+    ];
+
     public function register() {
         (new AdminRegisterCheck())->goCheck();
         if ($_POST['password'] !== $_POST['re_password']){
@@ -95,5 +94,9 @@ class Admin extends BaseController
                 '用户信息修改失败，请稍后再试～'
             ]);
         }
+    }
+
+    public function test() {
+
     }
 }

@@ -9,11 +9,12 @@
 namespace app\api\service;
 
 use app\api\model\Redis;
+use app\api\model\UserAuth;
 use app\exception\TokenException;
 use app\exception\UserNotExtistException;
 use app\exception\WeChatException;
 use think\Exception;
-use app\api\model\User;
+use app\api\model\Auth;
 use app\api\model\Admin;
 class TokenUser extends Token {
     protected $user = [];
@@ -31,6 +32,7 @@ class TokenUser extends Token {
      */
     public function get($uid) {
         $this->user = (new Admin())->getOne(['id' => $uid]);
+        $this->user['auth'] = (new UserAuth())->getList(['uid' => $this->user['id']], 0);
         if (!$this->user) {
             throw new UserNotExtistException();
         }

@@ -4,6 +4,7 @@
 namespace app\api\service;
 
 use app\api\controller\BaseController;
+use app\api\model\UserAuth;
 use app\api\service\Admin as AdminService;
 use app\api\model\Admin as AdminModel;
 use app\exception\AdminException;
@@ -38,7 +39,6 @@ class Admin
             'password' => md5($password)
         ];
         $adminInfo = AdminModel::where($condition)->find();
-
         if ($adminInfo){
             $token = (new TokenUser())->get($adminInfo['id']);
             $adminInfo['token'] = $token;
@@ -48,6 +48,7 @@ class Admin
             ]);
         }
 
+        $adminInfo['auth'] = (new UserAuth())->getList(['uid' => $adminInfo['id']], 0);
         return $adminInfo;
     }
 
