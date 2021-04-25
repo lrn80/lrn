@@ -10,12 +10,14 @@ use think\Route;
 
 Route::any('api/:version/email/getcode','api/:version.email/getCode'); // 发送邮件
 Route::any('api/:version/admin/register','api/:version.admin/register'); //用户注册
-Route::any('api/:version/admin/login','api/:version.admin/login'); //用户注册
-Route::post('api/:version/admin/edit','api/:version.admin/edit'); //用户注册
-Route::any('api/:version/admin/del','api/:version.admin/delete'); //用户注册
+Route::any('api/:version/admin/login','api/:version.admin/login'); //
+Route::post('api/:version/admin/edit','api/:version.admin/edit'); //
+Route::any('api/:version/admin/del','api/:version.admin/delete'); //
 
 
 Route::any('api/:version/auth/list','api/:version.auth/authList'); //获取权限列表
+Route::any('api/:version/auth/add','api/:version.auth/add');
+Route::any('api/:version/auth/update','api/:version.auth/update');
 
 
 Route::any('api/:version/books/add','api/:version.books/addBooks');

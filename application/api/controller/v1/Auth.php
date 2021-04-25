@@ -38,10 +38,12 @@ class Auth extends BaseController
     {
         (new AuthNameCheck())->goCheck();
         $name = $this->request->param('name');
-        $res = AuthService::addAuth($name);
+        $model_name = $this->request->param('model_name');
+        $res = AuthService::addAuth($name, $model_name);
         if ($res){
-            throw new SucceedMessage(
-                '权限添加成功'
+            throw new SucceedMessage([
+             'msg' =>  '权限添加成功'
+            ]
             );
         } else {
             throw new AuthException();
@@ -54,15 +56,14 @@ class Auth extends BaseController
         (new AuthCheck())->goCheck();
         $params = $this->request->param();
         $id = $params['id'];
-        $name = $params['name'];
-        $res = AuthService::update($id, $name);
+        $res = AuthService::update($id, $params);
         if ($res){
             throw new SucceedMessage([
-                'msg' => '权限添加成功'
+                'msg' => '权限更新成功'
             ]);
         } else{
             throw new AuthException([
-                'msg' => '权限添加异常，请稍后再试~'
+                'msg' => '权限更新异常，请稍后再试~'
             ]);
         }
     }

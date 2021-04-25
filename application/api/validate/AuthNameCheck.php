@@ -14,7 +14,7 @@ class AuthNameCheck extends BaseValidate
     protected $rule = [
         //'news_id' => 'require|isMustInteger',
         'name' => 'require|max:30|min:1',
-
+        'model_name' => 'require|max:30|min:1'
     ];
 
     protected $message = [

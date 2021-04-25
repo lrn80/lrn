@@ -11,5 +11,5 @@ namespace app\api\model;
 
 class Auth extends BaseModel
 {
-
+    public $hidden = [ 'update_time'];
 }
