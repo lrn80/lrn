@@ -17,7 +17,22 @@ class Books
     public static function getBooksList($page)
     {
         $booksModel = new BooksModel();
-        return $booksModel->getList([], $page);
+        $booksList =  $booksModel->getList([], $page);
+        $b_nums = array_column($booksList->toArray(), 'b_no');
+        $detailModel = new Detail();
+        $detailList = $detailModel->getList(['b_no' =>['in', $b_nums]], 0);
+        $detailList = array_column($detailList->toArray(), null, 'b_no');
+        foreach ($booksList as &$list){
+            if (isset($detailList[$list['b_no']])){
+                $list['call_number'] = $detailList[$list['b_no']]['call_number'];
+                $list['location'] = $detailList[$list['b_no']]['location'];
+                $list['press'] = $detailList[$list['b_no']]['press'];
+                $list['status'] = $detailList[$list['b_no']]['status'];
+            }
+        }
+
+        unset($list);
+        return $booksList;
     }
 
     public static function addBooks($params)
