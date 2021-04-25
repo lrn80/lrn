@@ -11,13 +11,7 @@ class Books
     public static function getBooksList($page)
     {
         $booksModel = new BooksModel();
-        $list = $booksModel->getList([], $page);
-        foreach ($list as &$item){
-            $item['price'] = $item['price'] / 100;
-        }
-
-        unset($item);
-        return $list;
+        return $booksModel->getList([], $page);
     }
 
     public static function addBooks($params)
@@ -88,5 +82,16 @@ class Books
         }
 
         return true;
+    }
+
+    public static function search($key, $page)
+    {
+        $booksModel = new BooksModel();
+        $list = $booksModel->where('bname', 'like', "%{$key}%")
+                   ->whereOr('author', 'like', "%$key%")
+                   ->page($page)
+                   ->select();
+
+        return $list;
     }
 }

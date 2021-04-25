@@ -12,6 +12,7 @@ use app\api\model\Auth;
 use app\api\service\Token;
 use app\exception\AuthException;
 use think\Controller;
+use think\Env;
 
 class BaseController extends Controller
 {
@@ -27,7 +28,9 @@ class BaseController extends Controller
     }
 
     public function checkAuth(){
-        return true;
+        if (Env::get('env') == 'local') {
+            return true;
+        }
         $authList = $this->authList();
         $auth_ids = array_column($authList, 'auth_id');
         $controller = request()->controller();

@@ -9,6 +9,7 @@ use app\api\validate\BooksCheck;
 use app\api\validate\BooksUpdateCheck;
 use app\api\validate\PageParamCheck;
 use app\api\service\Books as BooksService;
+use app\api\validate\SearchCheck;
 use app\exception\SucceedMessage;
 
 class Books extends BaseController
@@ -64,7 +65,16 @@ class Books extends BaseController
         }
     }
 
+    /**
+     * 搜索
+     * @return \think\response\Json
+     * @throws \app\exception\ParamException
+     */
     public function search(){
-
+        (new SearchCheck())->goCheck();
+        $key = $this->request->param('key');
+        $page = $this->request->param('page') ?? 1;
+        $list = BooksService::search($key, $page);
+        return json($list);
     }
 }

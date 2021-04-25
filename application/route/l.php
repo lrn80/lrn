@@ -21,7 +21,7 @@ Route::any('api/:version/auth/list','api/:version.auth/authList'); //获取权�
 Route::any('api/:version/books/add','api/:version.books/addBooks');
 Route::any('api/:version/books/list','api/:version.books/getBooksList');
 Route::any('api/:version/books/update','api/:version.books/updateBooks');
-
+Route::any('api/:version/books/search','api/:version.books/search');
 
 
 

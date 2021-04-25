@@ -9,7 +9,7 @@ class SearchCheck extends BaseValidate
     protected $rule = [
         //'news_id' => 'require|isMustInteger',
         'key' => 'require|max:100|min:1',
-        'page' => 'require|isMustInteger',
+        'page' => 'isMustInteger',
     ];
 
     protected $message = [
