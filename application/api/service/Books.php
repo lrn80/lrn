@@ -3,6 +3,7 @@
 
 namespace app\api\service;
 use app\api\model\Books as BooksModel;
+use app\api\model\Detail;
 use app\exception\BooksException;
 use think\Log;
 
@@ -31,12 +32,40 @@ class Books
             'b_no' => $params['b_no'],
         ];
 
+        $detail_data = [
+            'b_no' => $params['b_no'],
+            'call_number' => $params['call_number'],
+            'location' => $params['location'],
+            'author' => $params['author'],
+            'press' => $params['press'],
+            'status' => $params['status'] ?? 0
+        ];
+
         $booksModel = new BooksModel();
-        $res = $booksModel->insert($data);
-        if (!$res){
-            Log::error(__METHOD__ . ' 图书入库失败 data:' . json_encode($data));
+        $detailModel = new Detail();
+        $booksModel->startTrans();
+        try {
+            $res = $booksModel->insert($data);
+            if (!$res){
+                Log::error(__METHOD__ . ' 图书入库失败 data:' . json_encode($data));
+                throw new BooksException([
+                    'msg' => "图书入库失败～"
+                ]);
+            }
+
+            $detailRes = $detailModel->insert($detail_data);
+            if (!$detailRes){
+                Log::error(__METHOD__ . '  detail 图书入库失败 data:' . json_encode($data));
+                throw new BooksException([
+                    'msg' => "图书入库失败～"
+                ]);
+            }
+
+            $booksModel->commit();
+        } catch (\Exception $e){
+            $booksModel->rollback();
             throw new BooksException([
-                'msg' => "图书入库失败～"
+                'msg' => '图书入库失败，请稍后再试～'
             ]);
         }
 
