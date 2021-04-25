@@ -11,6 +11,7 @@ use app\api\model\News as NewsModel;
 use app\api\model\SearchHistory;
 use app\api\model\User;
 use app\api\model\UserCollectNews;
+use app\api\validate\NewsPageCheck;
 use think\Log;
 
 class News
@@ -94,5 +95,13 @@ class News
         return $news_model->getNewsListByCondition($condition, $page);
     }
 
-
+    public static function getUserNewsList($uid, $page)
+    {
+        $news_model = new NewsModel();
+        $conditions = [
+            'uid' => $uid,
+        ];
+        $list = $news_model->getNewsList($conditions, $page);
+        return $list;
+    }
 }

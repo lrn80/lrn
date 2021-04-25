@@ -105,4 +105,6 @@ class News extends BaseController
         $news_list = NewsService::search($params);
         return json($news_list);
     }
+
+
 }
