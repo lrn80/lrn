@@ -8,6 +8,7 @@ use app\api\service\Admin as AdminService;
 use app\api\service\Email;
 use app\api\service\Upload;
 use app\api\validate\AdminCheck;
+use app\api\validate\AdminIdCheck;
 use app\api\validate\AdminRegisterCheck;
 use app\api\validate\LoginCheck;
 use app\exception\AdminException;
@@ -18,7 +19,7 @@ use app\exception\UserExtistException;
 class Admin extends BaseController
 {
     public $beforeActionList = [
-        'checkAuth' => ['only' => 'test']
+        'checkAuth' => ['only' => 'delete']
     ];
 
     public function register() {
@@ -91,6 +92,17 @@ class Admin extends BaseController
         } else {
             throw new AdminException([
                 '用户信息修改失败，请稍后再试～'
+            ]);
+        }
+    }
+
+    public function delete(){
+        (new AdminIdCheck())->goCheck();
+        $uid = $this->request->param('id');
+        $res = AdminService::del($uid);
+        if ($res){
+            throw new SucceedMessage([
+                'msg' => '管理员删除成功'
             ]);
         }
     }

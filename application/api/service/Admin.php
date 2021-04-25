@@ -24,7 +24,7 @@ class Admin
             'email' => $email
         ];
 
-        $adminInfo = $adminModel->getOne($condition, true);
+        $adminInfo = $adminModel->getOne($condition);
         if ($adminInfo) {
             return true;
         }
@@ -100,5 +100,26 @@ class Admin
             Log::error(__METHOD__ . " 用户信息修改失败 id: {$uid} condition: " . json_encode($conditions));
             return false;
         }
+    }
+
+    public static function del($uid)
+    {
+        $adminModel = new AdminModel();
+        $info = $adminModel->getOne(['id' => $uid]);
+        if (!$info){
+            throw new AdminException([
+                'msg' => '你要删除的用户不存在或者已删除'
+            ]);
+        }
+
+        $res = $info->delete();
+        if (!$res){
+            Log::error(__METHOD__ . ' 用户删除失败请稍后再试～');
+            throw new AdminException([
+                'msg' => "用户删除失败请稍后再试～"
+            ]);
+        }
+
+        return true;
     }
 }
