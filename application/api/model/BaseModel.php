@@ -71,4 +71,8 @@ class BaseModel extends Model
         }
         return $this->count()['total'];
     }
+
+    public function updateData($data) {
+        return self::update($data);
+    }
 }
