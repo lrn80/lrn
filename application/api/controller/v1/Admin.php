@@ -78,8 +78,7 @@ class Admin extends BaseController
      */
     public function edit() {
         (new AdminCheck())->goCheck();
-        //$uid = Token::getCurrentTokenVar('id');
-        $uid = 1;
+        $uid = Token::getCurrentTokenVar('id');
         $params = request()->post();
         $save_name = Upload::uploadImg(config('setting.img_url'), 'image');
         if ($save_name != '') {
@@ -94,9 +93,5 @@ class Admin extends BaseController
                 '用户信息修改失败，请稍后再试～'
             ]);
         }
-    }
-
-    public function test() {
-
     }
 }
