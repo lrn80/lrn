@@ -5,6 +5,7 @@ namespace app\api\controller\v1;
 
 
 use app\api\controller\BaseController;
+use app\api\validate\BnoStIdCheck;
 use app\api\validate\BooksCheck;
 use app\api\validate\BooksUpdateCheck;
 use app\api\validate\PageParamCheck;

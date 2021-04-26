@@ -29,6 +29,7 @@ Route::any('api/:version/books/search','api/:version.books/search');
 Route::any('api/:version/detail/info','api/:version.detail/getBookInfo');
 
 
+Route::any('api/:version/borrow/lead','api/:version.borrow/leadBook');
 
 
 
