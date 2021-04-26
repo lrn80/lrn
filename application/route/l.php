@@ -26,6 +26,7 @@ Route::any('api/:version/books/list','api/:version.books/getBooksList');
 Route::any('api/:version/books/update','api/:version.books/updateBooks');
 Route::any('api/:version/books/search','api/:version.books/search');
 
+Route::any('api/:version/detail/info','api/:version.detail/getBookInfo');
 
 
 
