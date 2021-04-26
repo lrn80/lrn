@@ -8,6 +8,8 @@ use app\api\controller\BaseController;
 use app\api\validate\BnoStIdCheck;
 use app\api\validate\PageParamCheck;
 use app\api\service\Borrow as BorrowService;
+use app\exception\SucceedMessage;
+
 class Borrow extends BaseController
 {
     /**
@@ -27,5 +29,10 @@ class Borrow extends BaseController
         $b_no = $this->request->param('b_no');
         $st_id = $this->request->param('st_id');
         $res = BorrowService::leadBook($b_no, $st_id);
+        if ($res) {
+            throw new SucceedMessage([
+                'msg' => '借书成功'
+            ]);
+        }
     }
 }
