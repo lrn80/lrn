@@ -12,6 +12,9 @@ use app\exception\SucceedMessage;
 
 class Borrow extends BaseController
 {
+    public $beforeActionList = [
+        'checkAuth'
+    ];
     /**
      * 获取借书列表
      * @return \think\response\Json

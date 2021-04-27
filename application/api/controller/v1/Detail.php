@@ -10,10 +10,6 @@ use app\api\validate\BooksIdCheck;
 
 class Detail extends BaseController
 {
-    public $beforeActionList = [
-        'checkAuth'
-    ];
-
     public function getBookInfo(){
         (new BNoCheck())->goCheck();
         $bNo = $this->request->param('b_no');
