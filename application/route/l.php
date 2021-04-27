@@ -30,7 +30,7 @@ Route::any('api/:version/detail/info','api/:version.detail/getBookInfo');
 
 
 Route::any('api/:version/borrow/lead','api/:version.borrow/leadBook');
-
+Route::any('api/:version/borrow/list','api/:version.borrow/borrowList');
 
 
 
