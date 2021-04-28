@@ -8,6 +8,7 @@
 
 namespace app\api\service;
 
+use app\api\model\AuthGroup;
 use app\api\model\Redis;
 use app\api\model\UserAuth;
 use app\exception\TokenException;
@@ -32,7 +33,7 @@ class TokenUser extends Token {
      */
     public function get($uid) {
         $this->user = (new Admin())->getOne(['id' => $uid]);
-        $this->user['auth'] = (new UserAuth())->getList(['uid' => $this->user['id']], 0);
+        $this->user['auth'] = (new AuthGroup())->getList(['group_id' => $this->user['group_id']], 0);
         if (!$this->user) {
             throw new UserNotExtistException();
         }
