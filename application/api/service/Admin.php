@@ -4,6 +4,7 @@
 namespace app\api\service;
 
 use app\api\controller\BaseController;
+use app\api\model\AuthGroup;
 use app\api\model\UserAuth;
 use app\api\service\Admin as AdminService;
 use app\api\model\Admin as AdminModel;
@@ -48,7 +49,7 @@ class Admin
             ]);
         }
 
-        $adminInfo['auth'] = (new UserAuth())->getList(['uid' => $adminInfo['id']], 0);
+        $adminInfo['auth'] = (new AuthGroup())->getList(['group_id' => $adminInfo['group_id']], 0);
         return $adminInfo;
     }
 
