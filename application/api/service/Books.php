@@ -50,6 +50,7 @@ class Books
             'now_stock' => $params['total_stock'],
             'in_library_time' => $params['in_library_time'] ?? date('Y-m-d H:i:s'),
             'b_no' => $params['b_no'],
+            'warehose_no' => $params['warehose_no'],
         ];
 
         $detail_data = [
