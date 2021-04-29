@@ -8,6 +8,7 @@
 
 namespace app\api\service;
 use app\api\model\Auth as AuthModel;
+use app\api\model\AuthGroup;
 use app\api\model\UserAuth;
 use app\exception\AuthException;
 use think\Exception;
@@ -76,7 +77,7 @@ class Auth
     public static function del($authId)
     {
         $authModel = new AuthModel();
-        $authUserModel = new UserAuth();
+        $authUserModel = new AuthGroup();
         $info = $authModel->getOne(['id' => $authId]);
         if (!$info){
             throw new AuthException([

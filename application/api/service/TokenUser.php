@@ -10,10 +10,8 @@ namespace app\api\service;
 
 use app\api\model\AuthGroup;
 use app\api\model\Redis;
-use app\api\model\UserAuth;
 use app\exception\TokenException;
 use app\exception\UserNotExtistException;
-use app\exception\WeChatException;
 use think\Exception;
 use app\api\model\Auth;
 use app\api\model\Admin;
