@@ -8,6 +8,7 @@ use app\api\controller\BaseController;
 use app\api\validate\BnoStIdCheck;
 use app\api\validate\PageParamCheck;
 use app\api\service\Borrow as BorrowService;
+use app\api\validate\SearchCheck;
 use app\exception\SucceedMessage;
 
 class Borrow extends BaseController
@@ -37,5 +38,14 @@ class Borrow extends BaseController
                 'msg' => '借书成功'
             ]);
         }
+    }
+
+    public function search()
+    {
+        (new SearchCheck())->goCheck();
+        $key = $this->request->param('key');
+        $page = $this->request->param('page') ?? 1;
+        $list = BorrowService::search($key, $page);
+        return json($list);
     }
 }

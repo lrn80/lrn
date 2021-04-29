@@ -88,4 +88,13 @@ class Borrow
 
         return true;
     }
+
+    public static function search($key, $page)
+    {
+        $borrowModel = new BorrowModel();
+        return $borrowModel->where('b_no', 'like', "%{$key}%")
+            ->whereOr('s_no', 'like', "%$key%")
+            ->page($page)
+            ->select();
+    }
 }
