@@ -35,3 +35,7 @@ Route::any('api/:version/borrow/search','api/:version.borrow/search');
 
 // 获得分组列表
 Route::any('api/:version/group/list','api/:version.group/groupList');
+
+
+// 获得分组列表
+Route::any('api/:version/damage/add','api/:version.damage/addDamage');
