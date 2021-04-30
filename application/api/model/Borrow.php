@@ -22,4 +22,8 @@ class Borrow extends BaseModel
             return '';
         }
     }
+
+    public function getFineAttr($value){
+        return round($value / 100, 2);
+    }
 }

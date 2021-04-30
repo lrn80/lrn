@@ -32,7 +32,7 @@ Route::any('api/:version/detail/info','api/:version.detail/getBookInfo');
 Route::any('api/:version/borrow/lead','api/:version.borrow/leadBook');
 Route::any('api/:version/borrow/list','api/:version.borrow/borrowList');
 Route::any('api/:version/borrow/search','api/:version.borrow/search');
-
+Route::any('api/:version/borrow/return','api/:version.borrow/returnBook');
 // 获得分组列表
 Route::any('api/:version/group/list','api/:version.group/groupList');
 

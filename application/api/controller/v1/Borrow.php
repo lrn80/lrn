@@ -56,7 +56,11 @@ class Borrow extends BaseController
         (new BnoStIdCheck())->goCheck();
         $b_no = $this->request->param('b_no');
         $st_id = $this->request->param('st_id');
-
-
+        $res = BorrowService::returnBook($b_no, $st_id);
+        if ($res){
+            throw new SucceedMessage([
+                'msg' => '还书成功，再借一本别的书📖？'
+            ]);
+        }
     }
 }

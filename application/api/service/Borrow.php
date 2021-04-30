@@ -13,7 +13,8 @@ use think\Log;
 
 class Borrow
 {
-
+    const DAY_SECOND = 86400;
+    const BORROW_SUCCESS = 1;
     public static function getBorrowList($page, $status)
     {
         $borrowModel = new BorrowModel();
@@ -113,12 +114,6 @@ class Borrow
                 $info->status = 1;
             }
 
-            $data = [
-                'b_no' => $b_no,
-                's_no' => $st_id,
-                'return_at' => date('Y-m-d H:i:s'),
-                'latest_at' => date('Y-m-d H:i:s', strtotime('+1 month')),
-            ];
             $res = $booksInfo->setInc('now_stock');
             if (!$res){
                 Log::error(__METHOD__ . ' 库存增加失败b_no:' . $b_no . ' s_no:' . $st_id);
@@ -128,17 +123,37 @@ class Borrow
                 ]);
             }
 
-            $borrowRes = $borrowModel->insert($data);
+            $info = $borrowModel->getOne([
+                'b_no' => $b_no,
+                's_no' => $st_id,
+            ]);
+            if ($info->getData('borrow_status') == self::BORROW_SUCCESS){
+                throw new BorrowException([
+                    'msg' => '该书以被还，请勿重复操作～'
+                ]);
+            }
+
+            $updateData = [
+                'return_at' => date('Y-m-d H:i:s'),
+                'fine' => self::_getFine($b_no, $st_id),
+                'borrow_status' => self::BORROW_SUCCESS, // 还书成功
+            ];
+            $borrowRes = $borrowModel->save($updateData, [
+                'b_no' => $b_no,
+                's_no' => $st_id,
+            ]);
+
             if (!$borrowRes){
-                Log::error(__METHOD__ . ' borrow表插入失败 b_no:' . $b_no . ' s_no:' . $st_id);
+                Log::error(__METHOD__ . ' borrow表更新失败 b_no:' . $b_no . ' s_no:' . $st_id);
                 $borrowModel->rollback();
                 throw new BorrowException([
-                    'msg' => '借书失败，请稍后再试'
+                    'msg' => '还书失败，请稍后再试'
                 ]);
             }
 
             $borrowModel->commit();
         } catch (\Exception $e) {
+            $borrowModel->rollback();
             throw $e;
         }
 
@@ -152,5 +167,22 @@ class Borrow
             ->whereOr('s_no', 'like', "%$key%")
             ->page($page)
             ->select();
+    }
+
+    public static function _getFine($b_no, $s_no){
+        $borrowModel = new BorrowModel();
+        $conditions = [
+            'b_no' => $b_no,
+            's_no' => $s_no,
+        ];
+        $info = $borrowModel->getOne($conditions);
+        $latestAt = $info->getData('latest_at');
+
+        if (date('Y-m-d H:i:s') < $latestAt) {
+            return 0;
+        }
+
+        $diffSecond = time() - strtotime($latestAt);
+        return round($diffSecond / self::DAY_SECOND, 2) * 100;
     }
 }
