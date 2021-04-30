@@ -2,6 +2,7 @@
 
 
 namespace app\api\service;
+use app\api\model\Books as BooksModel;
 use \app\api\model\Damage as DamageModel;
 use app\exception\DamageException;
 use think\Log;
@@ -76,5 +77,14 @@ class Damage
         }
 
         return true;
+    }
+
+    public static function search($key, $page)
+    {
+        $damageModel = new DamageModel();
+        return $damageModel->where('b_no', 'like', "%{$key}%")
+            ->whereOr('bname', 'like', "%$key%")
+            ->page($page)
+            ->select();
     }
 }

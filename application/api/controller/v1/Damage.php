@@ -8,6 +8,7 @@ use app\api\controller\BaseController;
 use app\api\validate\DamageCheck;
 use app\api\validate\IDCheck;
 use app\api\validate\PageParamCheck;
+use app\api\validate\SearchCheck;
 use app\api\validate\StatusCheck;
 use app\exception\SucceedMessage;
 
@@ -59,5 +60,13 @@ class Damage extends BaseController
                 'msg' => '破损订单数据修改成功'
             ]);
         }
+    }
+
+    public function search(){
+        (new SearchCheck())->goCheck();
+        $key = $this->request->param('key');
+        $page = $this->request->param('page') ?? 1;
+        $list = DamageService::search($key, $page);
+        return json($list);
     }
 }

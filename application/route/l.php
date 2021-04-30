@@ -41,3 +41,4 @@ Route::any('api/:version/group/list','api/:version.group/groupList');
 Route::any('api/:version/damage/add','api/:version.damage/addDamage');
 Route::any('api/:version/damage/list','api/:version.damage/damageList');
 Route::any('api/:version/damage/repair','api/:version.damage/repair');
+Route::any('api/:version/damage/search','api/:version.damage/search');
