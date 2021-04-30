@@ -16,4 +16,10 @@ class Borrow extends BaseModel
 
         return $value;
     }
+
+    public function getMarkAttr($value){
+        if ($value == '无'){
+            return '';
+        }
+    }
 }

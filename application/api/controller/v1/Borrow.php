@@ -9,6 +9,7 @@ use app\api\validate\BnoStIdCheck;
 use app\api\validate\PageParamCheck;
 use app\api\service\Borrow as BorrowService;
 use app\api\validate\SearchCheck;
+use app\api\validate\StatusCheck;
 use app\exception\SucceedMessage;
 
 class Borrow extends BaseController
@@ -23,8 +24,10 @@ class Borrow extends BaseController
      */
     public function borrowList(){
         (new PageParamCheck())->goCheck();
+        (new StatusCheck())->goCheck();
         $page = $this->request->param('page');
-        $list = BorrowService::getBorrowList($page);
+        $status = $this->request->param('status');
+        $list = BorrowService::getBorrowList($page, $status);
         return json($list);
     }
 
@@ -47,5 +50,13 @@ class Borrow extends BaseController
         $page = $this->request->param('page') ?? 1;
         $list = BorrowService::search($key, $page);
         return json($list);
+    }
+
+    public function returnBook(){
+        (new BnoStIdCheck())->goCheck();
+        $b_no = $this->request->param('b_no');
+        $st_id = $this->request->param('st_id');
+
+
     }
 }
