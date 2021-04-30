@@ -37,6 +37,7 @@ Route::any('api/:version/borrow/return','api/:version.borrow/returnBook');
 Route::any('api/:version/group/list','api/:version.group/groupList');
 
 
-// 获得分组列表
+// 破损管理
 Route::any('api/:version/damage/add','api/:version.damage/addDamage');
 Route::any('api/:version/damage/list','api/:version.damage/damageList');
+Route::any('api/:version/damage/repair','api/:version.damage/repair');
