@@ -13,15 +13,20 @@ use think\Log;
 
 class Borrow
 {
-
-    public static function getBorrowList($page)
+    const DAY_SECOND = 86400;
+    const BORROW_SUCCESS = 1;
+    public static function getBorrowList($page, $status)
     {
         $borrowModel = new BorrowModel();
+        $conditions = [];
+        if ($status != 2){
+            $conditions['borrow_status'] = $status;
+        }
         $list = $borrowModel->alias('b')
                             ->join('books bk', 'b.b_no = bk.b_no')
                             ->join('student st', 'b.s_no = st.st_id')
-                            ->page($page)->field('bname,author,b.b_no,st.st_id,st_name
-                             borrow_at,latest_at,return_at,fine,mark,borrow_status')->select();
+                            ->page($page)->field('bname,author,b.b_no,st.st_id,st_name,
+                             borrow_at,latest_at,return_at,fine,mark,borrow_status')->where($conditions)->select();
 
         return $list;
     }
@@ -89,6 +94,72 @@ class Borrow
         return true;
     }
 
+    public static function returnBook($b_no, $st_id)
+    {
+        $detailModel = new DetailModel();
+        $booksModel = new BooksModel();
+        $studentModel = new Student();
+        $borrowModel = new BorrowModel();
+        $studentInfo = $studentModel->where(['st_id' => $st_id])->find();
+        if (!$studentInfo){
+            throw new StudentException([
+                'msg' => '该学生不存在或者已被开除～'
+            ]);
+        }
+        $borrowModel->startTrans();
+        try {
+            $info = $detailModel->where(['b_no' => $b_no])->find();
+            $booksInfo = $booksModel->where(['b_no' => $b_no])->find();
+            if($info->status == 0){
+                $info->status = 1;
+            }
+
+            $res = $booksInfo->setInc('now_stock');
+            if (!$res){
+                Log::error(__METHOD__ . ' 库存增加失败b_no:' . $b_no . ' s_no:' . $st_id);
+                $borrowModel->rollback();
+                throw new BooksException([
+                    'msg' => '库存增加失败，请稍后再试'
+                ]);
+            }
+
+            $info = $borrowModel->getOne([
+                'b_no' => $b_no,
+                's_no' => $st_id,
+            ]);
+            if ($info->getData('borrow_status') == self::BORROW_SUCCESS){
+                throw new BorrowException([
+                    'msg' => '该书以被还，请勿重复操作～'
+                ]);
+            }
+
+            $updateData = [
+                'return_at' => date('Y-m-d H:i:s'),
+                'fine' => self::_getFine($b_no, $st_id),
+                'borrow_status' => self::BORROW_SUCCESS, // 还书成功
+            ];
+            $borrowRes = $borrowModel->save($updateData, [
+                'b_no' => $b_no,
+                's_no' => $st_id,
+            ]);
+
+            if (!$borrowRes){
+                Log::error(__METHOD__ . ' borrow表更新失败 b_no:' . $b_no . ' s_no:' . $st_id);
+                $borrowModel->rollback();
+                throw new BorrowException([
+                    'msg' => '还书失败，请稍后再试'
+                ]);
+            }
+
+            $borrowModel->commit();
+        } catch (\Exception $e) {
+            $borrowModel->rollback();
+            throw $e;
+        }
+
+        return true;
+    }
+
     public static function search($key, $page)
     {
         $borrowModel = new BorrowModel();
@@ -96,5 +167,22 @@ class Borrow
             ->whereOr('s_no', 'like', "%$key%")
             ->page($page)
             ->select();
+    }
+
+    public static function _getFine($b_no, $s_no){
+        $borrowModel = new BorrowModel();
+        $conditions = [
+            'b_no' => $b_no,
+            's_no' => $s_no,
+        ];
+        $info = $borrowModel->getOne($conditions);
+        $latestAt = $info->getData('latest_at');
+
+        if (date('Y-m-d H:i:s') < $latestAt) {
+            return 0;
+        }
+
+        $diffSecond = time() - strtotime($latestAt);
+        return round($diffSecond / self::DAY_SECOND, 2) * 100;
     }
 }

@@ -16,4 +16,14 @@ class Borrow extends BaseModel
 
         return $value;
     }
+
+    public function getMarkAttr($value){
+        if ($value == '无'){
+            return '';
+        }
+    }
+
+    public function getFineAttr($value){
+        return round($value / 100, 2);
+    }
 }

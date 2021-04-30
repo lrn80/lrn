@@ -2,6 +2,7 @@
 
 
 namespace app\api\service;
+use app\api\model\Books as BooksModel;
 use \app\api\model\Damage as DamageModel;
 use app\exception\DamageException;
 use think\Log;
@@ -35,9 +36,8 @@ class Damage
             $data['bname'] = $params['bname'];
         }
 
-        if (isset($params['damage_at'])){
-            $data['damage_at'] = $params['damage_at'];
-        }
+
+        $data['damage_at'] = $params['damage_at'] ?? date('Y-m-d H:i:s');
 
         $damageModel = new DamageModel();
         $res = $damageModel->insert($data);
@@ -49,5 +49,42 @@ class Damage
         }
 
         return $res;
+    }
+
+    public static function repair($id)
+    {
+        $damageModel = new DamageModel();
+        $info = $damageModel->find($id);
+        if (!$info){
+            throw new DamageException([
+                'msg' => '破损订单不存在或者已删除'
+            ]);
+        }
+
+        if ($info->getData('repair') == self::REPAIR_STATUS_SUCCESS){
+            throw new DamageException([
+                'msg' => '破损订单已修复请勿重复操作'
+            ]);
+        }
+
+        $info->repair = self::REPAIR_STATUS_SUCCESS;
+        $info->repair_at = date('Y-m-d H:i:s');
+        $res = $info->save();
+        if (!$res){
+            throw new DamageException([
+                'msg' => '修改破损状态失败，请稍后再试～'
+            ]);
+        }
+
+        return true;
+    }
+
+    public static function search($key, $page)
+    {
+        $damageModel = new DamageModel();
+        return $damageModel->where('b_no', 'like', "%{$key}%")
+            ->whereOr('bname', 'like', "%$key%")
+            ->page($page)
+            ->select();
     }
 }
