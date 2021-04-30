@@ -8,10 +8,19 @@ use think\Log;
 
 class Damage
 {
-    public static function getDamageList($page)
+    const REPAIR_STATUS_SUCCESS = 1; // 已修复
+    const REPAIR_STATUS_NORMAL = 0; // 未修复
+    const REPAIR_STATUS_ALL = 2; //全部
+    public static function getDamageList($status, $page)
     {
         $damageModel = new DamageModel();
-        return $damageModel->getList([], $page);
+        $conditions = [];
+        if ($status != self::REPAIR_STATUS_ALL){ // 2全部
+            $conditions = [
+                'repair' => $status,
+            ];
+        }
+        return $damageModel->getList($conditions, $page);
     }
 
     public static function add($params)
