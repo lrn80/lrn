@@ -12,8 +12,10 @@ use app\api\service\TokenUser;
 use app\api\validate\LoginCheck;
 use app\api\validate\RegisterCheck;
 use app\exception\LoginException;
+use app\exception\ParamException;
 use app\exception\RegisterException;
 use app\exception\SucceedMessage;
+use app\exception\TokenException;
 use app\exception\UserException;
 use app\exception\UserExtistException;
 use think\Cache;
@@ -23,6 +25,8 @@ use think\Request;
 use app\api\service\User as UserService;
 use app\api\service\Email;
 use app\api\service\Token;
+use think\response\Json;
+
 class User {
     protected $user;
 
@@ -30,8 +34,7 @@ class User {
      * 用户登陆接口
      * @throws Exception
      * @throws LoginException
-     * @throws SucceedMessage
-     * @throws \app\exception\ParamException
+     * @throws ParamException
      */
     public function login() {
         (new LoginCheck())->goCheck();
@@ -61,7 +64,7 @@ class User {
      * @throws RegisterException
      * @throws SucceedMessage
      * @throws UserException
-     * @throws \app\exception\ParamException
+     * @throws ParamException
      */
     public function register() {
         (new RegisterCheck())->goCheck();
@@ -105,9 +108,9 @@ class User {
 
     /**
      * 点赞总数
-     * @return \think\response\Json
+     * @return Json
      * @throws Exception
-     * @throws \app\exception\TokenException
+     * @throws TokenException
      */
     public function upVoteSum()
     {

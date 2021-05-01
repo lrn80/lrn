@@ -10,6 +10,7 @@ use app\api\validate\PageParamCheck;
 use app\api\service\Borrow as BorrowService;
 use app\api\validate\SearchCheck;
 use app\api\validate\StatusCheck;
+use app\exception\ParamException;
 use app\exception\SucceedMessage;
 
 class Borrow extends BaseController
@@ -20,7 +21,7 @@ class Borrow extends BaseController
     /**
      * 获取借书列表
      * @return \think\response\Json
-     * @throws \app\exception\ParamException
+     * @throws ParamException
      */
     public function borrowList(){
         (new PageParamCheck())->goCheck();

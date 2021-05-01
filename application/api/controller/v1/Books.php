@@ -11,6 +11,7 @@ use app\api\validate\BooksUpdateCheck;
 use app\api\validate\PageParamCheck;
 use app\api\service\Books as BooksService;
 use app\api\validate\SearchCheck;
+use app\exception\ParamException;
 use app\exception\SucceedMessage;
 
 class Books extends BaseController
@@ -22,7 +23,7 @@ class Books extends BaseController
     /**
      * 获取图书管理模块列表
      * @return \think\response\Json
-     * @throws \app\exception\ParamException
+     * @throws ParamException
      */
     public function getBooksList() {
         (new PageParamCheck())->goCheck();
@@ -35,7 +36,8 @@ class Books extends BaseController
      * 增加图书信息
      * @throws SucceedMessage
      * @throws \app\exception\BooksException
-     * @throws \app\exception\ParamException
+     * @throws ParamException
+     * @throws \think\Exception
      */
     public function addBooks() {
         (new BooksCheck())->goCheck();
@@ -52,7 +54,8 @@ class Books extends BaseController
      * 更新图书信息
      * @throws SucceedMessage
      * @throws \app\exception\BooksException
-     * @throws \app\exception\ParamException
+     * @throws ParamException
+     * @throws \think\Exception
      */
     public function updateBooks() {
         (new BooksUpdateCheck())->goCheck();
@@ -69,7 +72,7 @@ class Books extends BaseController
     /**
      * 搜索
      * @return \think\response\Json
-     * @throws \app\exception\ParamException
+     * @throws ParamException
      */
     public function search(){
         (new SearchCheck())->goCheck();

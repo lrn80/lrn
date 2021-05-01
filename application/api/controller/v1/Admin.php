@@ -11,6 +11,7 @@ use app\api\validate\AdminCheck;
 use app\api\validate\AdminIdCheck;
 use app\api\validate\AdminRegisterCheck;
 use app\api\validate\LoginCheck;
+use app\api\validate\PageParamCheck;
 use app\exception\AdminException;
 use app\exception\LoginException;
 use app\exception\SucceedMessage;
@@ -54,6 +55,7 @@ class Admin extends BaseController
      * @return \think\response\Json
      * @throws LoginException
      * @throws \app\exception\ParamException
+     * @throws \think\Exception
      */
     public function login() {
         (new LoginCheck())->goCheck();
@@ -74,7 +76,6 @@ class Admin extends BaseController
      * @throws AdminException
      * @throws SucceedMessage
      * @throws \app\exception\ParamException
-     * @throws \app\exception\TokenException
      * @throws \think\Exception
      */
     public function edit() {
@@ -105,5 +106,13 @@ class Admin extends BaseController
                 'msg' => '管理员删除成功'
             ]);
         }
+    }
+
+    public function adminList()
+    {
+        (new PageParamCheck())->goCheck();
+        $page = $this->request->param('page');
+        $list = AdminService::getAdminList($page);
+        return json($list);
     }
 }

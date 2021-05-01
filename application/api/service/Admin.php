@@ -11,6 +11,7 @@ use app\api\model\Admin as AdminModel;
 use app\exception\AdminException;
 use app\exception\LoginException;
 use think\Log;
+use \app\api\model\Group as GroupModel;
 
 class Admin
 {
@@ -122,5 +123,21 @@ class Admin
         }
 
         return true;
+    }
+
+    public static function getAdminList($page)
+    {
+        $adminModel = new AdminModel();
+        $groupModel = new GroupModel();
+        $list = $adminModel->getList([], $page)->toArray();
+        $group_ids = array_column($list, 'group_id');
+        $group_list = $groupModel->getList(['id' => [ 'in', $group_ids]])->toArray();
+        $group_list = array_column($group_list, 'name', 'id');
+        foreach ($list as &$info){
+            $info['group_name'] = $group_list[$info['group_id']];
+        }
+
+        unset($info);
+        return $list;
     }
 }
