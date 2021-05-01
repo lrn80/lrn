@@ -6,10 +6,12 @@ namespace app\api\controller\v1;
 use app\api\controller\BaseController;
 use app\api\service\Admin as AdminService;
 use app\api\service\Email;
+use app\api\service\Token;
 use app\api\service\Upload;
 use app\api\validate\AdminCheck;
 use app\api\validate\AdminIdCheck;
 use app\api\validate\AdminRegisterCheck;
+use app\api\validate\GroupIdCheck;
 use app\api\validate\LoginCheck;
 use app\api\validate\PageParamCheck;
 use app\exception\AdminException;
@@ -108,11 +110,29 @@ class Admin extends BaseController
         }
     }
 
+    /**
+     * 获取管理员列表
+     * @return \think\response\Json
+     * @throws \app\exception\ParamException
+     */
     public function adminList()
     {
         (new PageParamCheck())->goCheck();
         $page = $this->request->param('page');
         $list = AdminService::getAdminList($page);
         return json($list);
+    }
+
+    public function adminAuth()
+    {
+        (new GroupIdCheck())->goCheck();
+        $group_id = $this->request->param('group_id');
+        $uid = Token::getCurrentTokenVar('id');
+        $res = AdminService::groupAdmin($group_id, $uid);
+        if ($res){
+            throw new SucceedMessage([
+                'msg' => '权限分配成功~'
+            ]);
+        }
     }
 }

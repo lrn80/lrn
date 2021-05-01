@@ -9,6 +9,7 @@ use app\api\model\UserAuth;
 use app\api\service\Admin as AdminService;
 use app\api\model\Admin as AdminModel;
 use app\exception\AdminException;
+use app\exception\AuthException;
 use app\exception\LoginException;
 use think\Log;
 use \app\api\model\Group as GroupModel;
@@ -125,6 +126,11 @@ class Admin
         return true;
     }
 
+    /**
+     * 获取管理员列表
+     * @param $page
+     * @return array
+     */
     public static function getAdminList($page)
     {
         $adminModel = new AdminModel();
@@ -139,5 +145,34 @@ class Admin
 
         unset($info);
         return $list;
+    }
+
+    public static function groupAdmin($groupId, $uid)
+    {
+        $adminModel = new AdminModel();
+        $groupModel = new GroupModel();
+        $adminInfo = $adminModel->getOne(['id' => $uid]);
+        if (!$adminInfo){
+            throw new AdminException([
+                'msg' => '该用户不存在或者已删除',
+            ]);
+        }
+
+        $groupInfo = $groupModel->getOne(['id' => $groupId]);
+        if (!$groupInfo){
+            throw new AuthException([
+                'msg' => '该权限分组不存在或者已删除',
+            ]);
+        }
+
+        $adminInfo->group_id = $groupId;
+        $res = $adminInfo->save();
+        if (!$res){
+            throw new AuthException([
+                'msg' => '权限分配失败，请稍后再试'
+            ]);
+        }
+
+        return true;
     }
 }

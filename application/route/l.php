@@ -13,6 +13,7 @@ Route::any('api/:version/admin/register','api/:version.admin/register'); //用�
 Route::any('api/:version/admin/login','api/:version.admin/login'); //
 Route::post('api/:version/admin/edit','api/:version.admin/edit'); //
 Route::any('api/:version/admin/del','api/:version.admin/delete'); //
+Route::any('api/:version/admin/admin_auth','api/:version.admin/adminAuth'); //
 
 Route::any('api/:version/auth/list','api/:version.auth/authList'); //获取权限列表
 Route::any('api/:version/auth/add','api/:version.auth/add');
