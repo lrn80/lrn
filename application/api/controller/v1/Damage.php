@@ -18,6 +18,9 @@ use think\response\Json;
 
 class Damage extends BaseController
 {
+    public $beforeActionList = [
+        'checkAuth'
+    ];
 
     /**
      * 获得破损 修复列表

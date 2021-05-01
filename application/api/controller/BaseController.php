@@ -28,15 +28,14 @@ class BaseController extends Controller
     }
 
     public function checkAuth(){
-        return true;
         $check = $this->request->param('check');
         if (isset($check) && $check == '123') {
             return true;
         }
 
-        if (Env::get('env') == 'local') {
-            return true;
-        }
+//        if (Env::get('env') == 'local') {
+//            return true;
+//        }
 
         $authList = $this->authList();
         $auth_ids = array_column($authList, 'auth_id');

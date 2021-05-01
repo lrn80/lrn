@@ -22,6 +22,10 @@ use think\response\Json;
 
 class Auth extends BaseController
 {
+    public $beforeActionList = [
+        'checkAuth'
+    ];
+
     /**
      * 获取权限列表
      * @return Json
