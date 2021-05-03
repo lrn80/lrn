@@ -181,9 +181,19 @@ class Admin
     public static function search($key, $page)
     {
         $adminModel = new AdminModel();
-        return $adminModel->where('email', 'like', "%{$key}%")
+        $groupModel = new GroupModel();
+        $list = $adminModel->where('email', 'like', "%{$key}%")
             ->whereOr('name', 'like', "%$key%")
             ->page($page)
-            ->select();
+            ->select()->toArray();
+        $group_ids = array_column($list, 'group_id');
+        $group_list = $groupModel->getList(['id' => [ 'in', $group_ids]])->toArray();
+        $group_list = array_column($group_list, 'name', 'id');
+        foreach ($list as &$info){
+            $info['group_name'] = $group_list[$info['group_id']];
+        }
+
+        unset($info);
+        return $list;
     }
 }
