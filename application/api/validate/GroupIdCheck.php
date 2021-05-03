@@ -13,6 +13,7 @@ class GroupIdCheck extends BaseValidate
 {
     protected $rule = [
         'group_id' => 'require|isMustInteger',
+        'uid' => 'require|isMustInteger'
     ];
     protected $message = [
 

@@ -128,7 +128,7 @@ class Admin extends BaseController
     {
         (new GroupIdCheck())->goCheck();
         $group_id = $this->request->param('group_id');
-        $uid = Token::getCurrentTokenVar('id');
+        $uid = $this->request->param('uid');
         $res = AdminService::groupAdmin($group_id, $uid);
         if ($res){
             throw new SucceedMessage([
