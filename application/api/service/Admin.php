@@ -167,8 +167,9 @@ class Admin
         }
 
         $adminInfo->group_id = $groupId;
-        $res = $adminInfo->save();
-        if (!$res){
+        try {
+            $adminInfo->save();
+        } catch (\Exception $e){
             throw new AuthException([
                 'msg' => '权限分配失败，请稍后再试'
             ]);
