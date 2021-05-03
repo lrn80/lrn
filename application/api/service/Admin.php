@@ -5,6 +5,7 @@ namespace app\api\service;
 
 use app\api\controller\BaseController;
 use app\api\model\AuthGroup;
+use app\api\model\Damage as DamageModel;
 use app\api\model\UserAuth;
 use app\api\service\Admin as AdminService;
 use app\api\model\Admin as AdminModel;
@@ -174,5 +175,14 @@ class Admin
         }
 
         return true;
+    }
+
+    public static function search($key, $page)
+    {
+        $adminModel = new AdminModel();
+        return $adminModel->where('email', 'like', "%{$key}%")
+            ->whereOr('name', 'like', "%$key%")
+            ->page($page)
+            ->select();
     }
 }

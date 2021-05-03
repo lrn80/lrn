@@ -14,6 +14,7 @@ use app\api\validate\AdminRegisterCheck;
 use app\api\validate\GroupIdCheck;
 use app\api\validate\LoginCheck;
 use app\api\validate\PageParamCheck;
+use app\api\validate\SearchCheck;
 use app\exception\AdminException;
 use app\exception\LoginException;
 use app\exception\SucceedMessage;
@@ -22,7 +23,7 @@ use app\exception\UserExtistException;
 class Admin extends BaseController
 {
     public $beforeActionList = [
-        'checkAuth' => ['only' => 'delete']
+        'checkAuth' => ['only' => 'delete,edit,adminAuth']
     ];
 
     public function register() {
@@ -134,5 +135,13 @@ class Admin extends BaseController
                 'msg' => '权限分配成功~'
             ]);
         }
+    }
+
+    public function search(){
+        (new SearchCheck())->goCheck();
+        $key = $this->request->param('key');
+        $page = $this->request->param('page') ?? 1;
+        $list = AdminService::search($key, $page);
+        return json($list);
     }
 }
