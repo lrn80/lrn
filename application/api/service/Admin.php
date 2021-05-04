@@ -3,18 +3,15 @@
 
 namespace app\api\service;
 
-use app\api\controller\BaseController;
-use app\api\model\AuthGroup;
-use app\api\model\Damage as DamageModel;
-use app\api\model\UserAuth;
-use app\api\service\Admin as AdminService;
 use app\api\model\Admin as AdminModel;
+use app\api\model\Auth as AuthModel;
+use app\api\model\AuthGroup;
+use app\api\model\Group as GroupModel;
 use app\exception\AdminException;
 use app\exception\AuthException;
 use app\exception\LoginException;
 use think\Log;
-use \app\api\model\Group as GroupModel;
-use \app\api\model\Auth as AuthModel;
+
 class Admin
 {
     /**
