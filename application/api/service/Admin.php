@@ -14,7 +14,7 @@ use app\exception\AuthException;
 use app\exception\LoginException;
 use think\Log;
 use \app\api\model\Group as GroupModel;
-
+use \app\api\model\Auth as AuthModel;
 class Admin
 {
     /**
@@ -52,7 +52,9 @@ class Admin
             ]);
         }
 
-        $adminInfo['auth'] = (new AuthGroup())->getList(['group_id' => $adminInfo['group_id']], 0);
+        $authGroupList = (new AuthGroup())->getList(['group_id' => $adminInfo['group_id']], 0)->toArray();
+        $authIds = array_column($authGroupList, 'auth_id');
+        $adminInfo['auth'] = (new AuthModel())->where(['id' => ['in', $authIds]])->field('id,name,controller_name')->select();
         return $adminInfo;
     }
 
