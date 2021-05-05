@@ -19,7 +19,13 @@ class Auth
     public static function getAuthList()
     {
         $authModel = new AuthModel();
-        return $authModel->getList([], 0);
+        $list = $authModel->getList([], 0);
+        foreach ($list as &$info){
+            $info['auth_id'] = $info['id'];
+            unset($info['id']);
+        }
+
+        return $list;
     }
 
     public static function addAuth($name, $model_name)
