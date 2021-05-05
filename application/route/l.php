@@ -20,6 +20,7 @@ Route::any('api/:version/auth/list','api/:version.auth/authList'); //获取权�
 Route::any('api/:version/auth/add','api/:version.auth/add');
 Route::any('api/:version/auth/update','api/:version.auth/update');
 Route::any('api/:version/auth/del','api/:version.auth/delete'); //
+Route::any('api/:version/group/auth_to_group','api/:version.group/authToGroup'); //
 
 Route::any('api/:version/books/add','api/:version.books/addBooks');
 Route::any('api/:version/books/list','api/:version.books/getBooksList');
@@ -33,6 +34,9 @@ Route::any('api/:version/borrow/search','api/:version.borrow/search');
 Route::any('api/:version/borrow/return','api/:version.borrow/returnBook');
 // 获得分组列表
 Route::any('api/:version/group/list','api/:version.group/groupList');
+Route::any('api/:version/group/auth_to_group','api/:version.group/authToGroup'); //
+Route::any('api/:version/group/group_auth_list','api/:version.group/groupAuthList'); //
+Route::any('api/:version/group/auth_list','api/:version.group/getGroupInfo'); //
 // 破损管理
 Route::any('api/:version/damage/add','api/:version.damage/addDamage');
 Route::any('api/:version/damage/list','api/:version.damage/damageList');
