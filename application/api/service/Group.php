@@ -22,35 +22,41 @@ class Group
         $groupModel = new GroupModel();
         $authGroupModel = new AuthGroup();
         $authIds = explode(',', $authIds);
-        $authGroupModel->startTrans();
-        foreach ($authIds as $authId) {
-            $authInfo = $authModel->getOne(['id' => $authId]);
+        $authGroupList = $authGroupModel->where(['group_id' => $groupId])->select()->toArray();
+        $groupAuthIds = array_column($authGroupList, 'auth_id');
+        $insertAuthIds = array_diff($authIds, $groupAuthIds);
+        $deleteAuthIds = array_diff($groupAuthIds, $authIds);
+        $insertData = [];
+
+        $groupInfo = $groupModel->getOne(['id' => $groupId]);
+        if (!$groupInfo) {
+            throw new AuthException([
+                'msg' => '该分组模块不存在，或者已删除'
+            ]);
+        }
+
+        foreach ($insertAuthIds as $insertAuthId){
+            $authInfo = $authModel->getOne(['id' => $insertAuthId]);
             if (!$authInfo) {
                 throw new AuthException([
                     'msg' => '该权限模块不存在或者已删除~'
                 ]);
             }
 
-            $groupInfo = $groupModel->getOne(['id' => $groupId]);
-            if (!$groupInfo) {
-                throw new AuthException([
-                    'msg' => '该分组模块不存在，或者已删除'
-                ]);
-            }
-
-            $insertData = [
+            $insertData[] = [
                 'group_id' => $groupId,
-                'auth_id' => $authId,
+                'auth_id' => $insertAuthId
             ];
+        }
 
-            try {
-                $authGroupModel->insert($insertData);
-            } catch (\Exception $e) {
-                $authGroupModel->rollback();
-                throw new AuthException([
-                    'msg' => '重复添加权限模块auth_id: ' . $authId
-                ]);
-            }
+        $authGroupModel->startTrans();
+
+        try {
+            $authGroupModel->insertAll($insertData);
+            $authGroupModel->where(['auth_id' => ['in', $deleteAuthIds], 'group_id' => $groupId])->delete();
+        } catch (\Exception $e) {
+            $authGroupModel->rollback();
+            throw $e;
         }
 
         $authGroupModel->commit();
