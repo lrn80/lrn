@@ -15,13 +15,20 @@ use app\api\validate\AuthCheck;
 use app\api\validate\AuthIdCheck;
 use app\api\validate\AuthNameCheck;
 use app\exception\AuthException;
+use app\exception\ParamException;
 use app\exception\SucceedMessage;
+use think\Exception;
+use think\response\Json;
 
 class Auth extends BaseController
 {
+    public $beforeActionList = [
+        'checkAuth'
+    ];
+
     /**
      * 获取权限列表
-     * @return \think\response\Json
+     * @return Json
      */
     public function authList() {
         $list = AuthService::getAuthList();
@@ -32,8 +39,8 @@ class Auth extends BaseController
      * 添加权限列表
      * @throws AuthException
      * @throws SucceedMessage
-     * @throws \app\exception\ParamException
-     * @throws \think\Exception
+     * @throws ParamException
+     * @throws Exception
      */
     public function add()
     {

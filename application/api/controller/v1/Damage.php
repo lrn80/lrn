@@ -10,10 +10,17 @@ use app\api\validate\IDCheck;
 use app\api\validate\PageParamCheck;
 use app\api\validate\SearchCheck;
 use app\api\validate\StatusCheck;
+use app\exception\DamageException;
+use app\exception\ParamException;
 use app\exception\SucceedMessage;
+use think\Exception;
+use think\response\Json;
 
 class Damage extends BaseController
 {
+    public $beforeActionList = [
+        'checkAuth'
+    ];
 
     /**
      * 获得破损 修复列表
@@ -30,8 +37,9 @@ class Damage extends BaseController
     /**
      * 增加破损订单
      * @throws SucceedMessage
-     * @throws \app\exception\DamageException
-     * @throws \app\exception\ParamException
+     * @throws DamageException
+     * @throws ParamException
+     * @throws Exception
      */
     public function addDamage()
     {
@@ -48,8 +56,9 @@ class Damage extends BaseController
     /**
      * 订单修复
      * @throws SucceedMessage
-     * @throws \app\exception\DamageException
-     * @throws \app\exception\ParamException
+     * @throws DamageException
+     * @throws ParamException
+     * @throws Exception
      */
     public function repair(){
         (new IDCheck())->goCheck();
@@ -62,6 +71,10 @@ class Damage extends BaseController
         }
     }
 
+    /**
+     * @return Json
+     * @throws ParamException
+     */
     public function search(){
         (new SearchCheck())->goCheck();
         $key = $this->request->param('key');

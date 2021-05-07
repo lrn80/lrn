@@ -31,7 +31,7 @@ class TokenUser extends Token {
      */
     public function get($uid) {
         $this->user = (new Admin())->getOne(['id' => $uid]);
-        $this->user['auth'] = (new AuthGroup())->getList(['group_id' => $this->user['group_id']], 0);
+        $this->user['auth'] = (new AuthGroup())->getList(['group_id' => $this->user['group_id']], 0)->toArray();
         if (!$this->user) {
             throw new UserNotExtistException();
         }

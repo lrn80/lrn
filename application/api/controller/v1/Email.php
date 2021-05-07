@@ -16,15 +16,18 @@ use app\exception\EmailException;
 use app\api\service\User as UserService;
 use app\exception\UserExtistException;
 use app\api\service\Admin as AdminService;
+use app\lib\exception\ParameterException;
+use think\Exception;
+use think\response\Json;
 
 class Email extends BaseController
 {
     /**
      * 获取验证码
-     * @return \think\response\Json
+     * @return Json
      * @throws EmailException
-     * @throws \app\lib\exception\ParameterException
-     * @throws \think\Exception
+     * @throws ParameterException
+     * @throws Exception
      */
     public function getCode()
     {

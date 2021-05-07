@@ -3,12 +3,12 @@
 
 namespace app\api\service;
 
-use app\api\controller\BaseController;
-use app\api\model\AuthGroup;
-use app\api\model\UserAuth;
-use app\api\service\Admin as AdminService;
 use app\api\model\Admin as AdminModel;
+use app\api\model\Auth as AuthModel;
+use app\api\model\AuthGroup;
+use app\api\model\Group as GroupModel;
 use app\exception\AdminException;
+use app\exception\AuthException;
 use app\exception\LoginException;
 use think\Log;
 
@@ -49,7 +49,9 @@ class Admin
             ]);
         }
 
-        $adminInfo['auth'] = (new AuthGroup())->getList(['group_id' => $adminInfo['group_id']], 0);
+        $authGroupList = (new AuthGroup())->getList(['group_id' => $adminInfo['group_id']], 0)->toArray();
+        $authIds = array_column($authGroupList, 'auth_id');
+        $adminInfo['auth'] = (new AuthModel())->where(['id' => ['in', $authIds]])->field('id,name,controller_name')->select();
         return $adminInfo;
     }
 
@@ -122,5 +124,75 @@ class Admin
         }
 
         return true;
+    }
+
+    /**
+     * 获取管理员列表
+     * @param $page
+     * @return array
+     */
+    public static function getAdminList($page)
+    {
+        $adminModel = new AdminModel();
+        $groupModel = new GroupModel();
+        $list = $adminModel->getList([], $page)->toArray();
+        $group_ids = array_column($list, 'group_id');
+        $group_list = $groupModel->getList(['id' => [ 'in', $group_ids]])->toArray();
+        $group_list = array_column($group_list, 'name', 'id');
+        foreach ($list as &$info){
+            $info['group_name'] = $group_list[$info['group_id']];
+        }
+
+        unset($info);
+        return $list;
+    }
+
+    public static function groupAdmin($groupId, $uid)
+    {
+        $adminModel = new AdminModel();
+        $groupModel = new GroupModel();
+        $adminInfo = $adminModel->getOne(['id' => $uid]);
+        if (!$adminInfo){
+            throw new AdminException([
+                'msg' => '该用户不存在或者已删除',
+            ]);
+        }
+
+        $groupInfo = $groupModel->getOne(['id' => $groupId]);
+        if (!$groupInfo){
+            throw new AuthException([
+                'msg' => '该权限分组不存在或者已删除',
+            ]);
+        }
+
+        $adminInfo->group_id = $groupId;
+        try {
+            $adminInfo->save();
+        } catch (\Exception $e){
+            throw new AuthException([
+                'msg' => '权限分配失败，请稍后再试'
+            ]);
+        }
+
+        return true;
+    }
+
+    public static function search($key, $page)
+    {
+        $adminModel = new AdminModel();
+        $groupModel = new GroupModel();
+        $list = $adminModel->where('email', 'like', "%{$key}%")
+            ->whereOr('name', 'like', "%$key%")
+            ->page($page)
+            ->select()->toArray();
+        $group_ids = array_column($list, 'group_id');
+        $group_list = $groupModel->getList(['id' => [ 'in', $group_ids]])->toArray();
+        $group_list = array_column($group_list, 'name', 'id');
+        foreach ($list as &$info){
+            $info['group_name'] = $group_list[$info['group_id']];
+        }
+
+        unset($info);
+        return $list;
     }
 }

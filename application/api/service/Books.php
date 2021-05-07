@@ -33,6 +33,11 @@ class Books
                 $list['location'] = $detailList[$list['b_no']]['location'];
                 $list['press'] = $detailList[$list['b_no']]['press'];
                 $list['status'] = $detailList[$list['b_no']]['status'];
+            } else {
+                $list['call_number'] = '';
+                $list['location'] = '';
+                $list['press'] = '';
+                $list['status'] = '';
             }
         }
 
