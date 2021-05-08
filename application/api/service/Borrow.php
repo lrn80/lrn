@@ -136,6 +136,18 @@ class Borrow
                 'msg' => '该学生不存在或者已被开除～'
             ]);
         }
+
+        $borrowInfo = $borrowModel->getOne([
+            'b_no' => $b_no,
+            's_no' => $st_id,
+            'borrow_status' => 1
+        ]);
+
+        if ($borrowInfo){
+            throw new BorrowException([
+                'msg' => '你已经归还这本书了',
+            ]);
+        }
         $borrowModel->startTrans();
         try {
             $info = $detailModel->where(['b_no' => $b_no])->find();
