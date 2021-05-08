@@ -39,7 +39,7 @@ class Borrow
                             ->join('books bk', 'b.b_no = bk.b_no')
                             ->join('student st', 'b.s_no = st.st_id')
                             ->page($page)->field('bname,author,b.b_no,st.st_id,st_name,
-                             borrow_at,latest_at,return_at,fine,mark,borrow_status')->where($conditions)->select();
+                             borrow_at,latest_at,return_at,fine,mark,borrow_status')->limit(7)->where($conditions)->select();
 
         $res = [
             'list' => $list,
