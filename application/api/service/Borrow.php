@@ -81,6 +81,7 @@ class Borrow
         $borrowInfo = $borrowModel->getOne([
             'b_no' => $b_no,
             's_no' => $st_id,
+            'borrow_status' => 0
         ]);
 
         if ($borrowInfo){
