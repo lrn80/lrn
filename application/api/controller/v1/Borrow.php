@@ -6,6 +6,7 @@ namespace app\api\controller\v1;
 
 use app\api\controller\BaseController;
 use app\api\validate\BnoStIdCheck;
+use app\api\validate\IDCheck;
 use app\api\validate\PageParamCheck;
 use app\api\service\Borrow as BorrowService;
 use app\api\validate\SearchCheck;
@@ -54,10 +55,9 @@ class Borrow extends BaseController
     }
 
     public function returnBook(){
-        (new BnoStIdCheck())->goCheck();
-        $b_no = $this->request->param('b_no');
-        $st_id = $this->request->param('st_id');
-        $res = BorrowService::returnBook($b_no, $st_id);
+        (new IDCheck())->goCheck();
+        $id = $this->request->param('id');
+        $res = BorrowService::returnBook($id);
         if ($res){
             throw new SucceedMessage([
                 'msg' => '还书成功，再借一本别的书📖？'
