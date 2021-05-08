@@ -27,7 +27,7 @@ class Books extends BaseController
      */
     public function getBooksList() {
         (new PageParamCheck())->goCheck();
-        $page = $this->request->param('page');
+        $page = $this->request->param('page') ?? 1;
         $list = BooksService::getBooksList($page);
         return json($list);
     }

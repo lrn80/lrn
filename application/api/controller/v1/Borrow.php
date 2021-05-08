@@ -26,7 +26,7 @@ class Borrow extends BaseController
     public function borrowList(){
         (new PageParamCheck())->goCheck();
         (new StatusCheck())->goCheck();
-        $page = $this->request->param('page');
+        $page = $this->request->param('page') ?? 1;
         $status = $this->request->param('status');
         $list = BorrowService::getBorrowList($page, $status);
         return json($list);

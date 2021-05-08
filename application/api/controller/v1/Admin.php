@@ -119,7 +119,7 @@ class Admin extends BaseController
     public function adminList()
     {
         (new PageParamCheck())->goCheck();
-        $page = $this->request->param('page');
+        $page = $this->request->param('page') ?? 1;
         $list = AdminService::getAdminList($page);
         return json($list);
     }

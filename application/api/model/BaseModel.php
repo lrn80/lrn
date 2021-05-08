@@ -23,7 +23,7 @@ class BaseModel extends Model
         return $finalUrl;
     }
 
-    public function getList($condition = [], $page = 1, $limit = 10, $orderBy = '', $toArray = false) {
+    public function getList($condition = [], $page = 1, $limit = 7, $orderBy = '', $toArray = false) {
         if ($condition) {
             $this->where($condition);
         }

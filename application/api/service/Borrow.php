@@ -17,18 +17,36 @@ class Borrow
     const BORROW_SUCCESS = 1;
     public static function getBorrowList($page, $status)
     {
+        $res = [
+            'list' => [],
+            'count' => 0,
+            'page' => 1,
+        ];
         $borrowModel = new BorrowModel();
         $conditions = [];
         if ($status != 2){
             $conditions['borrow_status'] = $status;
         }
+        $count = $borrowModel->alias('b')
+            ->join('books bk', 'b.b_no = bk.b_no')
+            ->join('student st', 'b.s_no = st.st_id')
+            ->where($conditions)->count();
+        if ($count == 0){
+            return $res;
+        }
+
         $list = $borrowModel->alias('b')
                             ->join('books bk', 'b.b_no = bk.b_no')
                             ->join('student st', 'b.s_no = st.st_id')
                             ->page($page)->field('bname,author,b.b_no,st.st_id,st_name,
                              borrow_at,latest_at,return_at,fine,mark,borrow_status')->where($conditions)->select();
 
-        return $list;
+        $res = [
+            'list' => $list,
+            'count' => (int)$count,
+            'page' => (int)$page
+        ];
+        return $res;
     }
 
     public static function leadBook($b_no, $st_id)
@@ -162,11 +180,29 @@ class Borrow
 
     public static function search($key, $page)
     {
+        $res = [
+            'list' => [],
+            'count' => 0,
+            'page' => 1,
+        ];
         $borrowModel = new BorrowModel();
-        return $borrowModel->where('b_no', 'like', "%{$key}%")
+        $count = $borrowModel->where('b_no', 'like', "%{$key}%")
             ->whereOr('s_no', 'like', "%$key%")
-            ->page($page)
+            ->count();
+        if ($count == 0){
+            return $res;
+        }
+
+        $list = $borrowModel->where('b_no', 'like', "%{$key}%")
+            ->whereOr('s_no', 'like', "%$key%")
+            ->page($page)->limit(5)
             ->select();
+        $res = [
+            'list' => $list,
+            'count' => (int)$count,
+            'page' => (int)$page
+        ];
+        return $res;
     }
 
     public static function _getFine($b_no, $s_no){

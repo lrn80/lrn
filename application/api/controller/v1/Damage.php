@@ -30,7 +30,7 @@ class Damage extends BaseController
         (new StatusCheck())->goCheck();
         (new PageParamCheck())->goCheck();
         $status = $this->request->param('status');
-        $page = $this->request->param('page');
+        $page = $this->request->param('page') ?? 1;
         return json(DamageService::getDamageList($status, $page));
     }
 

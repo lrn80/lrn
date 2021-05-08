@@ -133,8 +133,18 @@ class Admin
      */
     public static function getAdminList($page)
     {
+        $res = [
+            'list' => [],
+            'count' => 0,
+            'page' => 1,
+        ];
         $adminModel = new AdminModel();
         $groupModel = new GroupModel();
+        $count = $adminModel->count();
+        if ($count == 0){
+            return $res;
+        }
+
         $list = $adminModel->getList([], $page)->toArray();
         $group_ids = array_column($list, 'group_id');
         $group_list = $groupModel->getList(['id' => [ 'in', $group_ids]])->toArray();
@@ -144,7 +154,12 @@ class Admin
         }
 
         unset($info);
-        return $list;
+        $res = [
+            'list' => $list,
+            'count' => $count,
+            'page' => $page,
+        ];
+        return $res;
     }
 
     public static function groupAdmin($groupId, $uid)
@@ -179,8 +194,19 @@ class Admin
 
     public static function search($key, $page)
     {
+        $res = [
+            'list' => [],
+            'count' => 0,
+            'page' => 1,
+        ];
         $adminModel = new AdminModel();
         $groupModel = new GroupModel();
+        $count = $adminModel->where('email', 'like', "%{$key}%")
+            ->whereOr('name', 'like', "%$key%")->count();
+        if ($count == 0){
+            return $res;
+        }
+
         $list = $adminModel->where('email', 'like', "%{$key}%")
             ->whereOr('name', 'like', "%$key%")
             ->page($page)
@@ -193,6 +219,11 @@ class Admin
         }
 
         unset($info);
-        return $list;
+        $res = [
+            'list' => $list,
+            'count' => $count,
+            'page' => $page,
+        ];
+        return $res;
     }
 }

@@ -14,6 +14,11 @@ class Damage
     const REPAIR_STATUS_ALL = 2; //全部
     public static function getDamageList($status, $page)
     {
+        $res = [
+            'list' => [],
+            'count' => 0,
+            'page' => 1,
+        ];
         $damageModel = new DamageModel();
         $conditions = [];
         if ($status != self::REPAIR_STATUS_ALL){ // 2全部
@@ -21,7 +26,19 @@ class Damage
                 'repair' => $status,
             ];
         }
-        return $damageModel->getList($conditions, $page);
+
+        $count = $damageModel->count();
+        if ($count == 0){
+            return $res;
+        }
+
+        $list = $damageModel->getList($conditions, $page);
+        $res = [
+            'list' => $list,
+            'count' => $count,
+            'page' => $page
+        ];
+        return $res;
     }
 
     public static function add($params)
@@ -81,10 +98,27 @@ class Damage
 
     public static function search($key, $page)
     {
+        $res = [
+            'list' => [],
+            'count' => 0,
+            'page' => 1,
+        ];
         $damageModel = new DamageModel();
-        return $damageModel->where('b_no', 'like', "%{$key}%")
+        $count = $damageModel->where('b_no', 'like', "%{$key}%")
+            ->whereOr('bname', 'like', "%$key%")->count();
+        if ($count == 0){
+            return $res;
+        }
+
+        $list = $damageModel->where('b_no', 'like', "%{$key}%")
             ->whereOr('bname', 'like', "%$key%")
-            ->page($page)
+            ->page($page)->limit(5)
             ->select();
+        $res = [
+            'list' => $list,
+            'count' => (int)$count,
+            'page' => (int)$page
+        ];
+        return $res;
     }
 }

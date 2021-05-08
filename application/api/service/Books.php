@@ -21,7 +21,17 @@ class Books
 
     public static function getBooksList($page)
     {
+        $res = [
+            'list' => [],
+            'count' => 0,
+            'page' => 1
+        ];
         $booksModel = new BooksModel();
+        $count = $booksModel->count();
+        if ($count == 0){
+            return $res;
+        }
+
         $booksList =  $booksModel->getList([], $page);
         $b_nums = array_column($booksList->toArray(), 'b_no');
         $detailModel = new Detail();
@@ -42,7 +52,12 @@ class Books
         }
 
         unset($list);
-        return $booksList;
+        $res = [
+            'list' => $booksList,
+            'count' => (int)$count,
+            'page' => (int)$page
+        ];
+        return $res;
     }
 
     public static function addBooks($params)
@@ -153,10 +168,22 @@ class Books
 
     public static function search($key, $page)
     {
+        $res = [
+            'list' => [],
+            'count' => 0,
+            'page' => 1
+        ];
         $booksModel = new BooksModel();
-        return $booksModel->where('bname', 'like', "%{$key}%")
+        $count = $booksModel->where('bname', 'like', "%{$key}%")->count();
+        $list = $booksModel->where('bname', 'like', "%{$key}%")
                    ->whereOr('author', 'like', "%$key%")
                    ->page($page)
                    ->select();
+        $res = [
+            'list' => $list,
+            'count' => (int)$count,
+            'page' => (int)$page
+        ];
+        return $res;
     }
 }
