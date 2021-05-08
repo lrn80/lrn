@@ -38,7 +38,7 @@ class Borrow
         $list = $borrowModel->alias('b')
                             ->join('books bk', 'b.b_no = bk.b_no')
                             ->join('student st', 'b.s_no = st.st_id')
-                            ->page($page)->field('bname,author,b.b_no,st.st_id,st_name,
+                            ->page($page)->field('b.id,bname,author,b.b_no,st.st_id,st_name,
                              borrow_at,latest_at,return_at,fine,mark,borrow_status')->limit(7)->where($conditions)->select();
 
         $res = [
@@ -78,6 +78,17 @@ class Borrow
         }
 
         $borrowModel = new BorrowModel();
+        $borrowInfo = $borrowModel->getOne([
+            'b_no' => $b_no,
+            's_no' => $st_id,
+        ]);
+
+        if ($borrowInfo){
+            throw new BorrowException([
+                'msg' => '你已经借过这本书了',
+            ]);
+        }
+
         $data = [
             'b_no' => $b_no,
             's_no' => $st_id,
