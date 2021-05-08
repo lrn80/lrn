@@ -27,7 +27,7 @@ class Damage
             ];
         }
 
-        $count = $damageModel->count();
+        $count = $damageModel->where($conditions)->count();
         if ($count == 0){
             return $res;
         }

@@ -174,7 +174,10 @@ class Books
             'page' => 1
         ];
         $booksModel = new BooksModel();
-        $count = $booksModel->where('bname', 'like', "%{$key}%")->count();
+        $count = $booksModel->where('bname', 'like', "%{$key}%")->whereOr('author', 'like', "%$key%")->count();
+        if ($count == 0){
+            return $res;
+        }
         $list = $booksModel->where('bname', 'like', "%{$key}%")
                    ->whereOr('author', 'like', "%$key%")
                    ->page($page)
