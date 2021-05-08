@@ -193,9 +193,13 @@ class Borrow
             return $res;
         }
 
-        $list = $borrowModel->where('b_no', 'like', "%{$key}%")
+        $list = $borrowModel->alias('b')
+                ->join('books bk', 'b.b_no = bk.b_no')
+                ->join('student st', 'b.s_no = st.st_id')
+                ->page($page)->limit(5)->field('bname,author,b.b_no,st.st_id,st_name,
+                             borrow_at,latest_at,return_at,fine,mark,borrow_status')
+            ->where('b_no', 'like', "%{$key}%")
             ->whereOr('s_no', 'like', "%$key%")
-            ->page($page)->limit(5)
             ->select();
         $res = [
             'list' => $list,
