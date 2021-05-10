@@ -150,7 +150,12 @@ class Admin
         $group_list = $groupModel->getList(['id' => [ 'in', $group_ids]])->toArray();
         $group_list = array_column($group_list, 'name', 'id');
         foreach ($list as &$info){
-            $info['group_name'] = $group_list[$info['group_id']];
+            if (isset($group_list[$info['group_id']])){
+                $info['group_name'] = $group_list[$info['group_id']];
+            } else{
+                $info['group_name'] = '';
+            }
+
         }
 
         unset($info);

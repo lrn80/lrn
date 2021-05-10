@@ -49,6 +49,7 @@ class Borrow
         return $res;
     }
 
+
     public static function leadBook($b_no, $st_id)
     {
         $detailModel = new DetailModel();
