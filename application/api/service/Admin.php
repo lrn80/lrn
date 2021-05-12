@@ -79,13 +79,13 @@ class Admin
             return true;
         }
 
-        $conditions = [];
+        $data = [];
         if (isset($params['name'])) {
-            $conditions['name'] = $params['name'];
+            $data['name'] = $params['name'];
         }
 
         if (isset($params['avatar'])) {
-            $conditions['avatar'] = $params['avatar'];
+            $data['avatar'] = $params['avatar'];
         }
 
         $adminModel = AdminModel::get(['id' => $uid]);
@@ -95,12 +95,17 @@ class Admin
             ]);
         }
 
-        $conditions['id'] = $uid;
-        $res = $adminModel->save($conditions);
+        $data['id'] = $uid;
+        try {
+            $res = $adminModel->save($data);
+        } catch (\Exception $e){
+            Log::error(__METHOD__ . " 用户信息修改失败 id: {$uid} condition: " . json_encode($data));
+            throw $e;
+        }
+
         if ($res) {
             return true;
         } else {
-            Log::error(__METHOD__ . " 用户信息修改失败 id: {$uid} condition: " . json_encode($conditions));
             return false;
         }
     }
