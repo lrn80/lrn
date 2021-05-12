@@ -23,7 +23,7 @@ use app\exception\UserExtistException;
 class Admin extends BaseController
 {
     public $beforeActionList = [
-        'checkAuth' => ['only' => 'delete,edit,adminAuth']
+        'checkAuth' => ['only' => 'delete,adminAuth']
     ];
 
     public function register() {
