@@ -45,6 +45,8 @@ class Damage extends BaseController
     {
         (new DamageCheck())->goCheck();
         $params = $this->request->param();
+        $userName = \app\api\service\Token::getCurrentTokenVar('name');
+        $params['name'] = $userName;
         $res = DamageService::add($params);
         if ($res){
             throw new SucceedMessage([

@@ -32,7 +32,7 @@ class Faker{
                 'uid' => $uid,
                 'cid' => rand(1,7),
                 'author' => $uid_name[$uid],
-                'image_url' => "./upload/user/924e655022aee453710743990c24134c.jpg",
+                'image_url' => "/upload/user/924e655022aee453710743990c24134c.jpg",
                 'content' => $faker->text(1000),
                 'upvote' => rand(0,10000),
                 'create_time' => $faker->date("Y-m-d H:i:s"),
@@ -49,7 +49,7 @@ class Faker{
         for ($i=0; $i<6; $i++){
             $data[] = [
                 'username' => $faker->name,
-                'avatar' => "./upload/user/924e655022aee453710743990c24134c.jpg",
+                'avatar' => "/upload/user/924e655022aee453710743990c24134c.jpg",
                 'email' => $faker->email,
                 'password' => md5('123456'),
                 'introduction' => $faker->realText(50),

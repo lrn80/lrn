@@ -30,9 +30,9 @@ class BaseController extends Controller
             return true;
         }
 
-        if (Env::get('env') == 'local') {
-            return true;
-        }
+//        if (Env::get('env') == 'local') {
+//            return true;
+//        }
 
         $authList = Token::getCurrentTokenVar('auth');
         $auth_ids = array_column($authList, 'auth_id');

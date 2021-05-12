@@ -53,6 +53,9 @@ class Damage
             $data['bname'] = $params['bname'];
         }
 
+        if (isset($params['name'])){
+            $data['name'] = $params['name'];
+        }
 
         $data['damage_at'] = $params['damage_at'] ?? date('Y-m-d H:i:s');
 
