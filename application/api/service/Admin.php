@@ -96,10 +96,10 @@ class Admin
         }
 
         $data['id'] = $uid;
-        $res = $adminModel->save($data);
-        if ($res) {
+        try {
+            $adminModel->save($data);
             return true;
-        } else {
+        } catch (\Exception $e){
             return false;
         }
     }
