@@ -96,13 +96,7 @@ class Admin
         }
 
         $data['id'] = $uid;
-        try {
-            $res = $adminModel->save($data);
-        } catch (\Exception $e){
-            Log::error(__METHOD__ . " 用户信息修改失败 id: {$uid} condition: " . json_encode($data));
-            throw $e;
-        }
-
+        $res = $adminModel->save($data);
         if ($res) {
             return true;
         } else {

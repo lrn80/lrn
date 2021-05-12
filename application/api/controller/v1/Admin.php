@@ -83,8 +83,7 @@ class Admin extends BaseController
      */
     public function edit() {
         (new AdminCheck())->goCheck();
-        //$uid = Token::getCurrentTokenVar('id');
-        $uid = 8;
+        $uid = Token::getCurrentTokenVar('id');
         $params = request()->post();
         $save_name = Upload::uploadImg(config('setting.img_url'), 'image');
         if ($save_name != '') {
