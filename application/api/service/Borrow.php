@@ -157,11 +157,13 @@ class Borrow
                 ]);
             }
 
-
+            $dolor = self::_getFine($id);
+            $dolorYuan = $dolor / 100;
             $updateData = [
                 'return_at' => date('Y-m-d H:i:s'),
-                'fine' => self::_getFine($id),
+                'fine' => $dolor,
                 'borrow_status' => self::BORROW_SUCCESS, // 还书成功
+                'mark' => $dolor > 0 ? "预期{$dolorYuan}天，罚款{$dolorYuan}元" : '',
             ];
             $borrowRes = $borrowModel->save($updateData, [
                 'id' => $id,
