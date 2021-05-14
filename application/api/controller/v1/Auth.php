@@ -63,7 +63,7 @@ class Auth extends BaseController
     {
         (new AuthCheck())->goCheck();
         $params = $this->request->param();
-        $id = $params['id'];
+        $id = $params['auth_id'];
         $res = AuthService::update($id, $params);
         if ($res){
             throw new SucceedMessage([

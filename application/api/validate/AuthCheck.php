@@ -12,7 +12,7 @@ namespace app\api\validate;
 class AuthCheck extends BaseValidate
 {
     protected $rule = [
-        'id' => 'require|isMustInteger',
+        'auth_id' => 'require|isMustInteger',
         'model_name' => 'max:30|min:1',
         'name' => 'max:30|min:1',
     ];

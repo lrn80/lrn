@@ -204,7 +204,7 @@ class Borrow
         $list = $borrowModel->alias('b')
                 ->join('books bk', 'b.b_no = bk.b_no')
                 ->join('student st', 'b.s_no = st.st_id')
-                ->page($page)->limit(5)->field('bname,author,b.b_no,st.st_id,st_name,
+                ->page($page)->limit(7)->field('bname,author,b.b_no,st.st_id,st_name,
                              borrow_at,latest_at,return_at,fine,mark,borrow_status')
             ->where('b.b_no', 'like', "%{$key}%")
             ->whereOr('b.s_no', 'like', "%$key%")
