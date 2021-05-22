@@ -94,8 +94,8 @@ class Borrow
         $data = [
             'b_no' => $b_no,
             's_no' => $st_id,
-            'borrow_at' => date('Y-m-d H:i:s'),
-            'latest_at' => date('Y-m-d H:i:s', strtotime('+1 month')),
+            'borrow_at' => date('Y-m-d H:i:s', strtotime('+1 month')),
+            'latest_at' => date('Y-m-d H:i:s'),
         ];
         $borrowModel->startTrans();
         try {
@@ -223,7 +223,7 @@ class Borrow
             'id' => $id,
         ];
         $info = $borrowModel->getOne($conditions);
-        $latestAt = $info->getData('latest_at');
+        $latestAt = $info->getData('borrow_at');
 
         if (date('Y-m-d H:i:s') < $latestAt) {
             return 0;

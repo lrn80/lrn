@@ -61,7 +61,7 @@ class Admin
             'email' => $params['email'],
             'password' => md5($params['password']),
             'name' => $params['name'],
-            'avatar' => '/upload/user/1.png'
+            'avatar' => '/upload/user/1.png' // 初始头像
         ];
 
         $res = (new AdminModel())->insert($conditions);
